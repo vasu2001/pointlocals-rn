@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Iconicons from 'react-native-vector-icons/Ionicons';
+import MapView, {Marker} from 'react-native-maps';
 
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
@@ -15,18 +16,33 @@ const Location = ({}) => {
   const [pinCode, setPinCode] = useState('');
   const [lat, setLat] = useState('');
   const [long, setLong] = useState('');
+  const [mapCoor, setMapCoor] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+  });
+
+  const pos = {};
 
   return (
     <ScrollView contentContainerStyle={styles.main}>
       <View style={boxStyle}>
-        <View
-          style={{
-            width: '100%',
-            height: 200,
-            backgroundColor: 'lightgray',
-            marginBottom: 5,
+        <MapView
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
-        />
+          style={styles.map}>
+          <Marker
+            draggable
+            coordinate={mapCoor}
+            onDragEnd={(e) => {
+              console.log(e.nativeEvent.coordinate);
+              setMapCoor(e.nativeEvent.coordinate);
+            }}
+          />
+        </MapView>
         <Text style={styles.text}>
           Select a point in the map or enter manually below.
         </Text>
@@ -116,6 +132,13 @@ const styles = StyleSheet.create({
   locInput: {
     flex: 1,
     marginHorizontal: 5,
+  },
+
+  map: {
+    width: '100%',
+    height: 200,
+    backgroundColor: 'lightgray',
+    marginBottom: 5,
   },
 });
 

@@ -1,6 +1,7 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View, Text, StatusBar} from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 import MainNavigator from './src/navigators/MainNavigator';
 import {BACKGROUND, PRIMARY, TEXT} from './src/utils/colors';
 
@@ -15,6 +16,10 @@ const App = () => {
       card: BACKGROUND,
     },
   };
+
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
 
   return (
     <>
