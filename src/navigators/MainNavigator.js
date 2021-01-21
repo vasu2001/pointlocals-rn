@@ -10,6 +10,7 @@ import Location from '../screens/Location';
 import Details from '../screens/Details';
 import Contact from '../screens/Contact';
 import Gallery from '../screens/Gallery';
+import Dashboard from '../screens/Dashboard';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -31,7 +32,7 @@ const tabBarOptions = {
   },
   scrollEnabled: true,
   tabStyle: {
-    width: 100,
+    width: 110,
   },
 };
 
@@ -48,6 +49,7 @@ const MainNavigator = () => (
     </View>
 
     <Tab.Navigator tabBarOptions={tabBarOptions}>
+      <Tab.Screen name="Dashboard" component={Dashboard} />
       <Tab.Screen name="Main Info" component={MainInfo} />
       <Tab.Screen name="Location" component={Location} />
       <Tab.Screen name="Details" component={Details} />

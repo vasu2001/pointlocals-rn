@@ -12,6 +12,9 @@ const CustomInput = ({
   keyboardType,
   rightComponent,
   maxLength,
+  onEndEditing,
+  onFocus,
+  inputRef,
 }) => {
   return (
     <View style={style}>
@@ -29,6 +32,9 @@ const CustomInput = ({
               multiline: !!numberOfLines,
               keyboardType,
               maxLength,
+              onEndEditing,
+              onFocus,
+              ref: inputRef,
             }}
           />
         </View>
