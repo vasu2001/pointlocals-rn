@@ -1,8 +1,10 @@
 const initialState = {
   loading: false,
   loggedIn: false,
-  username: null,
+  name: null,
   email: null,
+  image: null,
+  uid: null,
   locations: {
     deleted: -1,
     uploaded: -1,
@@ -18,7 +20,10 @@ export default (state = initialState, action) => {
       return {...state, loading: action.payload};
 
     case 'LOGIN':
-      return {...state, loggedIn: true};
+      return {...state, ...action.payload, loggedIn: true};
+    case 'LOGOUT':
+      return initialState;
+
     default:
       return state;
   }

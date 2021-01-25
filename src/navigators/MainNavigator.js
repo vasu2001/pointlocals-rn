@@ -11,6 +11,7 @@ import Details from '../screens/Details';
 import Contact from '../screens/Contact';
 import Gallery from '../screens/Gallery';
 import Dashboard from '../screens/Dashboard';
+import {useSelector} from 'react-redux';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -36,23 +37,27 @@ const tabBarOptions = {
   },
 };
 
-const MainNavigator = () => (
-  <>
-    <Text style={styles.heading}>Add New Location</Text>
-    <Text style={styles.text}>
-      Welcome, <Text style={styles.colorText}>admin</Text>
-    </Text>
+const MainNavigator = () => {
+  const {name} = useSelector((state) => state);
 
-    <Tab.Navigator tabBarOptions={tabBarOptions}>
-      <Tab.Screen name="Dashboard" component={Dashboard} />
-      <Tab.Screen name="Main Info" component={MainInfo} />
-      <Tab.Screen name="Location" component={Location} />
-      <Tab.Screen name="Details" component={Details} />
-      <Tab.Screen name="Contact" component={Contact} />
-      <Tab.Screen name="Gallery" component={Gallery} />
-    </Tab.Navigator>
-  </>
-);
+  return (
+    <>
+      <Text style={styles.heading}>Add New Location</Text>
+      <Text style={styles.text}>
+        Welcome, <Text style={styles.colorText}>{name}</Text>
+      </Text>
+
+      <Tab.Navigator tabBarOptions={tabBarOptions}>
+        <Tab.Screen name="Dashboard" component={Dashboard} />
+        <Tab.Screen name="Main Info" component={MainInfo} />
+        <Tab.Screen name="Location" component={Location} />
+        <Tab.Screen name="Details" component={Details} />
+        <Tab.Screen name="Contact" component={Contact} />
+        <Tab.Screen name="Gallery" component={Gallery} />
+      </Tab.Navigator>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   heading: {

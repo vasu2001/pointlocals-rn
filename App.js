@@ -3,9 +3,10 @@ import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 
 import Main from './src/navigators/Main';
-import store from './src/redux/store';
+import {persistor, store} from './src/redux/store';
 import {BACKGROUND, PRIMARY, TEXT} from './src/utils/colors';
 
 const App = () => {
@@ -28,11 +29,13 @@ const App = () => {
     <>
       <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
 
-      <Provider store={store}>
-        <NavigationContainer theme={myTheme}>
-          <Main />
-        </NavigationContainer>
-      </Provider>
+      <NavigationContainer theme={myTheme}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Main />
+          </PersistGate>
+        </Provider>
+      </NavigationContainer>
     </>
   );
 };

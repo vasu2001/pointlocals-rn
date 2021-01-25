@@ -1,8 +1,9 @@
 import React from 'react';
-import {Text, View, Modal, StyleSheet} from 'react-native';
+import {View, Modal, StyleSheet, ActivityIndicator} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Auth from '../screens/Auth';
+import {PRIMARY} from '../utils/colors';
 import MainNavigator from './MainNavigator';
 
 const Main = ({}) => {
@@ -14,7 +15,7 @@ const Main = ({}) => {
 
       <Modal transparent visible={loading} animationType="fade">
         <View style={styles.modal}>
-          <Text>loading</Text>
+          <ActivityIndicator color={PRIMARY} animating size={50} />
         </View>
       </Modal>
     </>

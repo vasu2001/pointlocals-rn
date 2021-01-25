@@ -12,8 +12,8 @@ import {BACKGROUND, PRIMARY} from '../utils/colors';
 const {width} = Dimensions.get('screen');
 
 const Auth = ({}) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('apto');
+  const [password, setPassword] = useState('pass');
 
   const dispatch = useDispatch();
 
@@ -42,7 +42,9 @@ const Auth = ({}) => {
         <CustomButton
           text="Login"
           style={styles.login}
-          onPress={() => dispatch(login())}
+          onPress={() =>
+            dispatch(login({username, password, type: 'username/pass'}))
+          }
         />
       </View>
     </View>

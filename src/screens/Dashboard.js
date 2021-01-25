@@ -1,37 +1,47 @@
 import React from 'react';
 import {Text, View, StyleSheet, Dimensions, Image} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 import CustomButton from '../components/CustomButton';
+import {logout} from '../redux/actions/auth';
+import {baseURL} from '../utils/axios';
 import {PRIMARY, TEXT} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 
 const {width} = Dimensions.get('screen');
 
 const Dashboard = ({}) => {
+  const {name, email, image, locations} = useSelector((state) => state);
+  const dispatch = useDispatch();
+
   return (
     <View style={styles.main}>
       <View style={styles.profileSection}>
-        <Image style={styles.photo} />
-        <Text style={styles.value}>abc</Text>
-        <Text style={styles.value}>jsfgaj@jsskad.sd</Text>
+        <Image style={styles.photo} source={{uri: baseURL + image}} />
+        <Text style={styles.value}>{name}</Text>
+        <Text style={styles.value}>{email}</Text>
       </View>
 
       <View style={styles.cardContainer}>
         <View style={[boxStyle, styles.card]}>
           <Text style={styles.label}>Locations Uploaded</Text>
-          <Text style={styles.value}>223</Text>
+          <Text style={styles.value}>{locations.uploaded}</Text>
         </View>
         <View style={[boxStyle, styles.card]}>
           <Text style={styles.label}>Locations Verified</Text>
-          <Text style={styles.value}>223</Text>
+          <Text style={styles.value}>{locations.verified}</Text>
         </View>
         <View style={[boxStyle, styles.card]}>
           <Text style={styles.label}>Locations Deleted</Text>
-          <Text style={styles.value}>223</Text>
+          <Text style={styles.value}>{locations.deleted}</Text>
         </View>
       </View>
 
-      <CustomButton text="Logout" style={styles.logout} />
+      <CustomButton
+        text="Logout"
+        style={styles.logout}
+        onPress={() => dispatch(logout())}
+      />
     </View>
   );
 };
