@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, View, StyleSheet, TextInput} from 'react-native';
+import {BACKGROUND} from '../utils/colors';
 
 const CustomInput = ({
   value,
@@ -15,10 +16,11 @@ const CustomInput = ({
   onEndEditing,
   onFocus,
   inputRef,
+  secureTextEntry,
 }) => {
   return (
     <View style={style}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <View style={{flexDirection: 'row', marginBottom: 10}}>
         <View style={styles.box}>
           {icon}
@@ -35,6 +37,7 @@ const CustomInput = ({
               onEndEditing,
               onFocus,
               ref: inputRef,
+              secureTextEntry,
             }}
           />
         </View>
@@ -58,6 +61,7 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     alignItems: 'center',
     flex: 1,
+    backgroundColor: BACKGROUND,
   },
   input: {
     padding: 5,

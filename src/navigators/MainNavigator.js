@@ -39,14 +39,9 @@ const tabBarOptions = {
 const MainNavigator = () => (
   <>
     <Text style={styles.heading}>Add New Location</Text>
-    <View style={styles.row}>
-      <Text style={styles.text}>
-        Welcome, <Text style={styles.colorText}>admin</Text>
-      </Text>
-      <TouchableOpacity>
-        <Text style={styles.text}>Logout</Text>
-      </TouchableOpacity>
-    </View>
+    <Text style={styles.text}>
+      Welcome, <Text style={styles.colorText}>admin</Text>
+    </Text>
 
     <Tab.Navigator tabBarOptions={tabBarOptions}>
       <Tab.Screen name="Dashboard" component={Dashboard} />
@@ -66,15 +61,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: 3,
   },
-  row: {
+  text: {
     margin: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     borderBottomWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 5,
-  },
-  text: {
     fontSize: 15,
     color: TEXT,
   },

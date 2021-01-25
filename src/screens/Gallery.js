@@ -12,17 +12,31 @@ const Gallery = ({}) => {
   return (
     <View style={styles.main}>
       <View style={boxStyle}>
-        <Text style={styles.text}>Entrance Photos*</Text>
-        <TouchableOpacity style={styles.uploadButton}>
-          <Text style={styles.lightText}>Tap here to upload files</Text>
-        </TouchableOpacity>
-        <Text style={styles.lightText}>6MB Max. Upload Size</Text>
-
-        <View style={{height: 20, borderBottomWidth: 1, marginBottom: 10}} />
+        <UploadItem
+          label="Entrance Photos*"
+          style={{borderBottomWidth: 1, marginVertical: 5}}
+        />
+        <UploadItem
+          label="Full Look Photos*"
+          style={{borderBottomWidth: 1, marginVertical: 5}}
+        />
+        <UploadItem label="Interior Photos*" />
       </View>
 
       <TncRow tnc={tnc} setTnc={setTnc} />
       <CustomButton text="Save Location" style={{marginBottom: 30}} />
+    </View>
+  );
+};
+
+const UploadItem = ({label, style}) => {
+  return (
+    <View style={[styles.uploadItem, style]}>
+      <Text style={styles.text}>{label}</Text>
+      <TouchableOpacity style={styles.uploadButton}>
+        <Text style={styles.lightText}>Tap here to upload files</Text>
+      </TouchableOpacity>
+      <Text style={styles.lightText}>6MB Max. Upload Size</Text>
     </View>
   );
 };
@@ -37,6 +51,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
+  uploadItem: {
+    paddingVertical: 5,
+    borderColor: 'darkgray',
+  },
   uploadButton: {
     alignSelf: 'stretch',
     borderWidth: 1,
@@ -49,7 +67,8 @@ const styles = StyleSheet.create({
   },
   lightText: {
     color: 'gray',
-    fontSize: 15,
+    fontSize: 14,
+    marginBottom: 5,
   },
 });
 

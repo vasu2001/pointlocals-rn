@@ -1,8 +1,11 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {StyleSheet, View, Text, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-import MainNavigator from './src/navigators/MainNavigator';
+import {Provider} from 'react-redux';
+
+import Main from './src/navigators/Main';
+import store from './src/redux/store';
 import {BACKGROUND, PRIMARY, TEXT} from './src/utils/colors';
 
 const App = () => {
@@ -25,9 +28,11 @@ const App = () => {
     <>
       <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
 
-      <NavigationContainer theme={myTheme}>
-        <MainNavigator />
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer theme={myTheme}>
+          <Main />
+        </NavigationContainer>
+      </Provider>
     </>
   );
 };
