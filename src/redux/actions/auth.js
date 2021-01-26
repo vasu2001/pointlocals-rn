@@ -1,13 +1,5 @@
 import axios from '../../utils/axios';
-
-const startLoading = {
-    type: 'LOADING',
-    payload: true,
-  },
-  stopLoading = {
-    type: 'LOADING',
-    payload: false,
-  };
+import {startLoading, stopLoading} from '../../utils/reduxHelpers';
 
 export const login = ({username, password, type}) => async (dispatch) => {
   dispatch(startLoading);

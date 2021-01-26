@@ -61,3 +61,4 @@ buck-out/
 Pointlocals-postman.json
 *.hprof
 secrets.xml
+android/app/google-services.json
