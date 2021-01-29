@@ -10,10 +10,18 @@ const initialState = {
     uploaded: -1,
     verified: -1,
   },
+  temp: {
+    photos: {
+      entrance: null,
+      full: null,
+      interior: null,
+    },
+  },
 };
 
 export default (state = initialState, action) => {
   console.log(action);
+  let newState = null;
 
   switch (action.type) {
     case 'LOADING':
@@ -23,6 +31,14 @@ export default (state = initialState, action) => {
       return {...state, ...action.payload, loggedIn: true};
     case 'LOGOUT':
       return initialState;
+
+    case 'USER_RECORD':
+      return {...state, locations: action.payload};
+
+    case 'UPLOAD_IMAGE':
+      newState = {...state};
+      newState.temp.photos[action.payload.type] = action.payload.path;
+      return newState;
 
     default:
       return state;

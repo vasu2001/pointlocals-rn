@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const baseURL = 'http://staging.pointlocals.com/api';
+export const serverURL = 'http://staging.pointlocals.com';
 
 export default axios.create({
-  baseURL,
+  baseURL: serverURL,
 });

@@ -88,8 +88,14 @@ const Auth = ({}) => {
           }
         />
 
-        <GoogleSigninButton onPress={googleSignIn} style={styles.google} />
-        <LoginButton onLoginFinished={fbSignIn} style={styles.fb} />
+        <View style={styles.oauth}>
+          <GoogleSigninButton
+            onPress={googleSignIn}
+            style={styles.google}
+            size={GoogleSigninButton.Size.Icon}
+          />
+          <LoginButton onLoginFinished={fbSignIn} style={styles.fb} />
+        </View>
       </View>
     </View>
   );
@@ -128,16 +134,21 @@ const styles = StyleSheet.create({
   login: {
     marginTop: 10,
   },
-  google: {
-    alignSelf: 'center',
+
+  oauth: {
+    flexDirection: 'row',
     marginTop: 10,
-    width: 120,
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+  google: {
+    marginRight: 10,
   },
   fb: {
-    alignSelf: 'center',
-    // marginTop: 10,
-    width: 100,
-    height: 35,
+    width: 30,
+    height: 30,
+    transform: [{scale: 1.3}],
+    margin: 9,
   },
 });
 

@@ -1,16 +1,15 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
-import TncRow from '../components/TncRow';
 import {PRIMARY} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 
-const Details = ({}) => {
-  const [tnc, setTnc] = useState(false);
+const Details = ({navigation}) => {
+  const [] = useState(false);
   const [floors, setFloors] = useState('');
   const [desc, setDesc] = useState('');
 
@@ -49,8 +48,11 @@ const Details = ({}) => {
         />
       </View>
 
-      <TncRow tnc={tnc} setTnc={setTnc} />
-      <CustomButton text="Save Location" style={{marginBottom: 30}} />
+      <CustomButton
+        text="Next"
+        style={styles.next}
+        onPress={() => navigation.navigate('Contact')}
+      />
     </View>
   );
 };
@@ -58,6 +60,9 @@ const Details = ({}) => {
 const styles = StyleSheet.create({
   main: {
     padding: 15,
+  },
+  next: {
+    marginTop: 25,
   },
 });
 

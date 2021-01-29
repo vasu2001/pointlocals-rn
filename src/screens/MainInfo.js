@@ -6,10 +6,9 @@ import {boxStyle} from '../utils/styles';
 import {PRIMARY} from '../utils/colors';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
-import TncRow from '../components/TncRow';
 
-const MainInfo = () => {
-  const [tnc, setTnc] = useState(false);
+const MainInfo = ({navigation}) => {
+  const [] = useState(false);
   const [locationName, setLocationName] = useState('');
   const [sLoc, setSLoc] = useState('');
 
@@ -33,8 +32,11 @@ const MainInfo = () => {
         />
       </View>
 
-      <TncRow tnc={tnc} setTnc={setTnc} />
-      <CustomButton text="Save Location" />
+      <CustomButton
+        text="Next"
+        style={styles.next}
+        onPress={() => navigation.navigate('Location')}
+      />
     </View>
   );
 };
@@ -51,6 +53,9 @@ const locationIcon = (
 const styles = StyleSheet.create({
   main: {
     padding: 15,
+  },
+  next: {
+    marginTop: 25,
   },
 });
 

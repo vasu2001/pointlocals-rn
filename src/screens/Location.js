@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   Text,
   View,
@@ -13,13 +13,14 @@ import RNGooglePlaces from 'react-native-google-places';
 
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
-import TncRow from '../components/TncRow';
 import {PRIMARY} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
+import {useDispatch} from 'react-redux';
+import {startLoading, stopLoading} from '../utils/reduxHelpers';
 
-const Location = ({}) => {
-  const [tnc, setTnc] = useState(false);
-  const [loading, setLoading] = useState(false);
+const Location = ({navigation}) => {
+  const [] = useState(false);
+  const [] = useState(false);
   const [location, setLocation] = useState({
     latitude: 0,
     longitude: 0,
@@ -33,6 +34,7 @@ const Location = ({}) => {
 
   const mapRef = useRef();
   const addressRef = useRef();
+  const dispatch = useDispatch();
 
   const setLocationField = (field) => (value) =>
     setLocation({
@@ -56,7 +58,7 @@ const Location = ({}) => {
   };
 
   const getCurrentLocation = async () => {
-    setLoading(true);
+    dispatch(startLoading);
 
     try {
       await PermissionsAndroid.requestMultiple([
@@ -80,7 +82,7 @@ const Location = ({}) => {
       console.log(err);
     }
 
-    setLoading(false);
+    dispatch(stopLoading);
   };
 
   const changeAddress = () => {
@@ -162,11 +164,7 @@ const Location = ({}) => {
         />
         <Text style={styles.locationAcc}>Location Accuracy: 6m</Text>
 
-        <CustomButton
-          text="Copy Geolocation"
-          onPress={getCurrentLocation}
-          disabled={loading}
-        />
+        <CustomButton text="Copy Geolocation" onPress={getCurrentLocation} />
         <View style={styles.locRow}>
           <CustomInput
             value={location.latitude.toString()}
@@ -191,8 +189,11 @@ const Location = ({}) => {
         </View>
       </View>
 
-      <TncRow tnc={tnc} setTnc={setTnc} />
-      <CustomButton text="Save Location" />
+      <CustomButton
+        text="Next"
+        style={styles.next}
+        onPress={() => navigation.navigate('Details')}
+      />
     </ScrollView>
   );
 };
@@ -234,6 +235,10 @@ const styles = StyleSheet.create({
     height: 200,
     backgroundColor: 'lightgray',
     marginBottom: 5,
+  },
+
+  next: {
+    marginTop: 25,
   },
 });
 

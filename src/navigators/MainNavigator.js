@@ -47,7 +47,7 @@ const MainNavigator = () => {
         Welcome, <Text style={styles.colorText}>{name}</Text>
       </Text>
 
-      <Tab.Navigator tabBarOptions={tabBarOptions}>
+      <Tab.Navigator tabBarOptions={tabBarOptions} swipeEnabled={false}>
         <Tab.Screen name="Dashboard" component={Dashboard} />
         <Tab.Screen name="Main Info" component={MainInfo} />
         <Tab.Screen name="Location" component={Location} />

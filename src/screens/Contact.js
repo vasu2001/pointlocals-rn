@@ -1,16 +1,15 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
-import TncRow from '../components/TncRow';
 import {PRIMARY} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 
-const Contact = ({}) => {
-  const [tnc, setTnc] = useState(false);
+const Contact = ({navigation}) => {
+  const [] = useState(false);
   const [phNo, setPhNo] = useState('');
   const [phNo1, setPhNo1] = useState('');
   const [phNo2, setPhNo2] = useState('');
@@ -62,8 +61,12 @@ const Contact = ({}) => {
           icon={emailIcon}
         />
       </View>
-      <TncRow tnc={tnc} setTnc={setTnc} />
-      <CustomButton text="Save Location" style={{marginBottom: 30}} />
+
+      <CustomButton
+        text="Next"
+        style={styles.next}
+        onPress={() => navigation.navigate('Gallery')}
+      />
     </ScrollView>
   );
 };
@@ -102,6 +105,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: 10,
     paddingHorizontal: 15,
+  },
+  next: {
+    marginTop: 25,
   },
 });
 

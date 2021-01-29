@@ -11,7 +11,7 @@ export const login = ({username, password, type}) => async (dispatch) => {
     formData.append('type', '0');
     formData.append('type', 'site');
 
-    const {data} = await axios.post('login', formData);
+    const {data} = await axios.post('/api/login', formData);
     dispatch({
       type: 'LOGIN',
       payload: data?.info,
