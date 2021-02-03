@@ -16,6 +16,17 @@ const initialState = {
       full: null,
       interior: null,
     },
+    locationName: null,
+    similarLocationName: null,
+    address: null,
+    latitude: null,
+    longitude: null,
+    pincode: null,
+    floors: null,
+    description: null,
+    phNo: [null, null, null],
+    website: null,
+    email: null,
   },
 };
 
@@ -38,6 +49,11 @@ export default (state = initialState, action) => {
     case 'UPLOAD_IMAGE':
       newState = {...state};
       newState.temp.photos[action.payload.type] = action.payload.path;
+      return newState;
+
+    case 'UPDATE_TEMP':
+      newState = {...state};
+      newState.temp = {...state.temp, ...action.payload};
       return newState;
 
     default:

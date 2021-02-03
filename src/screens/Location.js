@@ -17,6 +17,7 @@ import {PRIMARY} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 import {useDispatch} from 'react-redux';
 import {startLoading, stopLoading} from '../utils/reduxHelpers';
+import {addLocation} from '../redux/actions/core';
 
 const Location = ({navigation}) => {
   const [] = useState(false);
@@ -110,6 +111,14 @@ const Location = ({navigation}) => {
     addressRef.current?.blur();
   };
 
+  const onNext = () => {
+    dispatch(
+      addLocation(location, () => {
+        navigation.navigate('Details');
+      }),
+    );
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.main}>
       <View style={boxStyle}>
@@ -189,11 +198,7 @@ const Location = ({navigation}) => {
         </View>
       </View>
 
-      <CustomButton
-        text="Next"
-        style={styles.next}
-        onPress={() => navigation.navigate('Details')}
-      />
+      <CustomButton text="Next" style={styles.next} onPress={onNext} />
     </ScrollView>
   );
 };

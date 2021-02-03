@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import axios from '../../utils/axios';
 import {startLoading, stopLoading} from '../../utils/reduxHelpers';
 
@@ -51,6 +52,45 @@ export const uploadImage = (image, type) => async (dispatch) => {
     // console.log(data);
   } catch (err) {
     console.log(JSON.stringify(err));
+  }
+  dispatch(stopLoading);
+};
+
+export const addToTemp = (items) => (dispatch) => {
+  dispatch({
+    type: 'UPDATE_TEMP',
+    payload: items,
+  });
+};
+
+export const addLocation = (data, callback) => async (dispatch, getState) => {
+  dispatch(startLoading);
+
+  try {
+    const {
+      temp: {locationName},
+    } = getState();
+
+    const formData = new FormData();
+    formData.append('lat', data.latitude);
+    formData.append('lon', data.longitude);
+    formData.append('name', locationName);
+
+    const {data: similarData} = await axios.post(
+      'https://staging.pointlocals.com/api/locationCheck',
+      formData,
+    );
+    // console.log(similarData);
+
+    if (!similarData.duplicate) {
+      // location is unique
+      dispatch(addToTemp(data));
+      callback();
+    } else {
+      Alert.alert('Similar Location exists already');
+    }
+  } catch (err) {
+    console.log('loaction check error:', err);
   }
   dispatch(stopLoading);
 };
