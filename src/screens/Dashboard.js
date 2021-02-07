@@ -45,7 +45,7 @@ const Dashboard = ({navigation}) => {
       <CustomButton
         text="Add a new location"
         style={styles.addLoc}
-        onPress={() => navigation.navigate('Main Info')}
+        onPress={() => navigation.navigate('Add Location')}
       />
 
       <CustomButton

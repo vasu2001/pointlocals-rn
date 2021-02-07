@@ -1,17 +1,11 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabBarOptions,
-} from '@react-navigation/material-top-tabs';
-import MainInfo from '../screens/MainInfo';
-import {PRIMARY, TEXT} from '../utils/colors';
-import Location from '../screens/Location';
-import Details from '../screens/Details';
-import Contact from '../screens/Contact';
-import Gallery from '../screens/Gallery';
-import Dashboard from '../screens/Dashboard';
+import {Text, StyleSheet} from 'react-native';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useSelector} from 'react-redux';
+
+import {PRIMARY, TEXT} from '../utils/colors';
+import Dashboard from '../screens/Dashboard';
+import StackNavigator from './StackNavigator';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -31,10 +25,10 @@ const tabBarOptions = {
   indicatorStyle: {
     height: 2.5,
   },
-  scrollEnabled: true,
-  tabStyle: {
-    width: 110,
-  },
+  // scrollEnabled: true,
+  // tabStyle: {
+  //   width: 110,
+  // },
 };
 
 const MainNavigator = () => {
@@ -47,13 +41,9 @@ const MainNavigator = () => {
         Welcome, <Text style={styles.colorText}>{name}</Text>
       </Text>
 
-      <Tab.Navigator tabBarOptions={tabBarOptions} swipeEnabled={false}>
+      <Tab.Navigator tabBarOptions={tabBarOptions}>
         <Tab.Screen name="Dashboard" component={Dashboard} />
-        <Tab.Screen name="Main Info" component={MainInfo} />
-        <Tab.Screen name="Location" component={Location} />
-        <Tab.Screen name="Details" component={Details} />
-        <Tab.Screen name="Contact" component={Contact} />
-        <Tab.Screen name="Gallery" component={Gallery} />
+        <Tab.Screen name="Add Location" component={StackNavigator} />
       </Tab.Navigator>
     </>
   );

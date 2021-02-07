@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 
 import CustomButton from '../components/CustomButton';
@@ -54,7 +54,7 @@ const UploadItem = ({label, style, dispatch, type, photos}) => {
     } else if (photo.errorCode) {
       console.log(photo.errorMessage);
     } else {
-      console.log(photo);
+      // console.log(photo);
       dispatch(uploadImage(photo, type));
     }
   };
@@ -67,7 +67,7 @@ const UploadItem = ({label, style, dispatch, type, photos}) => {
       <TouchableOpacity
         style={styles.uploadButton}
         onPress={() =>
-          launchImageLibrary(
+          launchCamera(
             {
               mediaType: 'photo',
             },

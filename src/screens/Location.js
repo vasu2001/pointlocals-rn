@@ -20,8 +20,7 @@ import {startLoading, stopLoading} from '../utils/reduxHelpers';
 import {addLocation} from '../redux/actions/core';
 
 const Location = ({navigation}) => {
-  const [] = useState(false);
-  const [] = useState(false);
+  const [accuracy, setAccuracy] = useState(-1);
   const [location, setLocation] = useState({
     latitude: 0,
     longitude: 0,
@@ -71,6 +70,11 @@ const Location = ({navigation}) => {
         'location',
       ]);
       // console.log(places);
+
+      navigator.geolocation.getCurrentPosition((res) => {
+        console.log(res);
+        setAccuracy(res.coords.accuracy);
+      });
 
       setLocation({
         ...location,
@@ -130,6 +134,7 @@ const Location = ({navigation}) => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
+          showsCompass
           style={styles.map}>
           <Marker
             draggable
@@ -171,7 +176,9 @@ const Location = ({navigation}) => {
             />
           }
         />
-        <Text style={styles.locationAcc}>Location Accuracy: 6m</Text>
+        <Text style={styles.locationAcc}>
+          Location Accuracy: {accuracy > 0 && accuracy + ' m'}
+        </Text>
 
         <CustomButton text="Copy Geolocation" onPress={getCurrentLocation} />
         <View style={styles.locRow}>
