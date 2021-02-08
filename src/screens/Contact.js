@@ -2,9 +2,11 @@ import React, {useState} from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {useDispatch} from 'react-redux';
 
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
+import {addToTemp} from '../redux/actions/core';
 import {PRIMARY} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 
@@ -15,6 +17,18 @@ const Contact = ({navigation}) => {
   const [phNo2, setPhNo2] = useState('');
   const [website, setWebsite] = useState('');
   const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
+
+  const onNext = () => {
+    dispatch(
+      addToTemp({
+        phNo: [phNo, phNo1, phNo2],
+        email,
+        website,
+      }),
+    );
+    navigation.navigate('Gallery');
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.main}>
@@ -62,11 +76,10 @@ const Contact = ({navigation}) => {
         />
       </View>
 
-      <CustomButton
-        text="Next"
-        style={styles.next}
-        onPress={() => navigation.navigate('Gallery')}
-      />
+      <View style={styles.bottom}>
+        <CustomButton text="Previous" onPress={() => navigation.goBack()} />
+        <CustomButton text="Next" style={styles.next} onPress={onNext} />
+      </View>
     </ScrollView>
   );
 };
@@ -106,8 +119,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     paddingHorizontal: 15,
   },
-  next: {
+  bottom: {
     marginTop: 25,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  next: {
+    marginLeft: 10,
   },
 });
 

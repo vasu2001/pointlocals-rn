@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import {launchCamera} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -7,17 +15,29 @@ import CustomButton from '../components/CustomButton';
 import TncRow from '../components/TncRow';
 import {PRIMARY, TEXT} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
-import {uploadImage} from '../redux/actions/core';
+import {saveLocation, uploadImage} from '../redux/actions/core';
 
-const Gallery = ({}) => {
+const Gallery = ({navigation}) => {
   const [tnc, setTnc] = useState(false);
   const dispatch = useDispatch();
   const {
     temp: {photos},
   } = useSelector((state) => state);
 
+  const onSubmit = () => {
+    if (!tnc) {
+      Alert.alert('Accept TnC');
+      return;
+    }
+    dispatch(
+      saveLocation(() => {
+        navigation.popToTop();
+      }),
+    );
+  };
+
   return (
-    <View style={styles.main}>
+    <ScrollView contentContainerStyle={styles.main}>
       <View style={boxStyle}>
         <UploadItem
           label="Entrance Photos*"
@@ -42,8 +62,16 @@ const Gallery = ({}) => {
       </View>
 
       <TncRow tnc={tnc} setTnc={setTnc} />
-      <CustomButton text="Save Location" style={{marginBottom: 30}} />
-    </View>
+
+      <View style={styles.bottom}>
+        <CustomButton text="Previous" onPress={() => navigation.goBack()} />
+        <CustomButton
+          text="Save Location"
+          style={styles.submit}
+          onPress={onSubmit}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -59,7 +87,7 @@ const UploadItem = ({label, style, dispatch, type, photos}) => {
     }
   };
 
-  const imageUploaded = !!photos[type];
+  const imageUploaded = photos[type].length > 0;
 
   return (
     <View style={[styles.uploadItem, style]}>
@@ -74,9 +102,19 @@ const UploadItem = ({label, style, dispatch, type, photos}) => {
             callback,
           )
         }>
-        <Text style={[styles.lightText, imageUploaded && {color: TEXT}]}>
-          {imageUploaded ? 'Image uploaded' : 'Tap here to upload files'}
-        </Text>
+        {imageUploaded ? (
+          <View style={styles.imageRow}>
+            {photos[type].map((path) => (
+              <Image
+                source={{uri: 'https://www.pointlocals.com' + path}}
+                style={styles.image}
+              />
+            ))}
+            <Text style={styles.uploadMore}>Tap here to{'\n'}upload more</Text>
+          </View>
+        ) : (
+          <Text style={styles.lightText}>Tap here to upload files</Text>
+        )}
       </TouchableOpacity>
       <Text style={styles.lightText}>6MB Max. Upload Size</Text>
     </View>
@@ -111,6 +149,32 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 14,
     marginBottom: 5,
+  },
+
+  imageRow: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+  },
+  image: {
+    width: 75,
+    height: 75,
+    backgroundColor: 'lightgray',
+    marginRight: 5,
+  },
+  uploadMore: {
+    textAlign: 'center',
+    color: 'gray',
+    fontSize: 14,
+    flex: 1,
+  },
+
+  bottom: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  submit: {
+    marginLeft: 10,
   },
 });
 

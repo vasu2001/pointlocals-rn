@@ -19,18 +19,20 @@ import {useDispatch} from 'react-redux';
 import {startLoading, stopLoading} from '../utils/reduxHelpers';
 import {addLocation} from '../redux/actions/core';
 
+//distanceDelta = Math.exp(Math.log(360) - (zoom * Math.LN2));
+const initialCoor = {latitude: 17.385, longitude: 78.4867};
+
 const Location = ({navigation}) => {
   const [accuracy, setAccuracy] = useState(-1);
   const [location, setLocation] = useState({
-    latitude: 0,
-    longitude: 0,
+    ...initialCoor,
     address: '',
     pinCode: '',
   });
-  const [mapLocation, setMapLocation] = useState({
-    latitude: 0,
-    longitude: 0,
-  });
+  const [mapLocation, setMapLocation] = useState(initialCoor);
+
+  // weird bug with map- requires a style update for showing zoom controls
+  const [mapHeight, setMapHeight] = useState(200);
 
   const mapRef = useRef();
   const addressRef = useRef();
@@ -72,8 +74,9 @@ const Location = ({navigation}) => {
       // console.log(places);
 
       navigator.geolocation.getCurrentPosition((res) => {
-        console.log(res);
-        setAccuracy(res.coords.accuracy);
+        // console.log(res);
+        const {accuracy} = res.coords;
+        setAccuracy(Math.round((accuracy + Number.EPSILON) * 10) / 10);
       });
 
       setLocation({
@@ -129,13 +132,14 @@ const Location = ({navigation}) => {
         <MapView
           ref={mapRef}
           initialRegion={{
-            latitude: 0,
-            longitude: 0,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            ...initialCoor,
+            latitudeDelta: 0.005493164062500003,
+            longitudeDelta: 0.005493164062500003,
           }}
           showsCompass
-          style={styles.map}>
+          zoomControlEnabled
+          onMapReady={() => setMapHeight(201)}
+          style={[styles.map, {height: mapHeight}]}>
           <Marker
             draggable
             coordinate={mapLocation}
@@ -205,7 +209,10 @@ const Location = ({navigation}) => {
         </View>
       </View>
 
-      <CustomButton text="Next" style={styles.next} onPress={onNext} />
+      <View style={styles.bottom}>
+        <CustomButton text="Previous" onPress={() => navigation.goBack()} />
+        <CustomButton text="Next" style={styles.next} onPress={onNext} />
+      </View>
     </ScrollView>
   );
 };
@@ -244,13 +251,17 @@ const styles = StyleSheet.create({
 
   map: {
     width: '100%',
-    height: 200,
     backgroundColor: 'lightgray',
     marginBottom: 5,
   },
 
-  next: {
+  bottom: {
     marginTop: 25,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  next: {
+    marginLeft: 10,
   },
 });
 

@@ -2,9 +2,11 @@ import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useDispatch} from 'react-redux';
 
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
+import {addToTemp} from '../redux/actions/core';
 import {PRIMARY} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 
@@ -12,6 +14,17 @@ const Details = ({navigation}) => {
   const [] = useState(false);
   const [floors, setFloors] = useState('');
   const [desc, setDesc] = useState('');
+  const dispatch = useDispatch();
+
+  const onNext = () => {
+    dispatch(
+      addToTemp({
+        floors,
+        description: desc,
+      }),
+    );
+    navigation.navigate('Contact');
+  };
 
   return (
     <View style={styles.main}>
@@ -48,11 +61,10 @@ const Details = ({navigation}) => {
         />
       </View>
 
-      <CustomButton
-        text="Next"
-        style={styles.next}
-        onPress={() => navigation.navigate('Contact')}
-      />
+      <View style={styles.bottom}>
+        <CustomButton text="Previous" onPress={() => navigation.goBack()} />
+        <CustomButton text="Next" style={styles.next} onPress={onNext} />
+      </View>
     </View>
   );
 };
@@ -61,8 +73,13 @@ const styles = StyleSheet.create({
   main: {
     padding: 15,
   },
-  next: {
+  bottom: {
     marginTop: 25,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  next: {
+    marginLeft: 10,
   },
 });
 

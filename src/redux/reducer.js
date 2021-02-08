@@ -12,16 +12,16 @@ const initialState = {
   },
   temp: {
     photos: {
-      entrance: null,
-      full: null,
-      interior: null,
+      entrance: [],
+      full: [],
+      interior: [],
     },
     locationName: null,
     similarLocationName: null,
     address: null,
     latitude: null,
     longitude: null,
-    pincode: null,
+    pinCode: null,
     floors: null,
     description: null,
     phNo: [null, null, null],
@@ -48,7 +48,10 @@ export default (state = initialState, action) => {
 
     case 'UPLOAD_IMAGE':
       newState = {...state};
-      newState.temp.photos[action.payload.type] = action.payload.path;
+      newState.temp.photos[action.payload.type] = [
+        ...newState.temp.photos[action.payload.type],
+        action.payload.path,
+      ];
       return newState;
 
     case 'UPDATE_TEMP':
