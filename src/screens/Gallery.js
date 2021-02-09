@@ -10,12 +10,14 @@ import {
 } from 'react-native';
 import {launchCamera} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
+import {CommonActions} from '@react-navigation/native';
 
 import CustomButton from '../components/CustomButton';
 import TncRow from '../components/TncRow';
 import {PRIMARY, TEXT} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 import {saveLocation, uploadImage} from '../redux/actions/core';
+import {useEffect} from 'react';
 
 const Gallery = ({navigation}) => {
   const [tnc, setTnc] = useState(false);
@@ -31,7 +33,12 @@ const Gallery = ({navigation}) => {
     }
     dispatch(
       saveLocation(() => {
-        navigation.popToTop();
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'Dashboard'}],
+          }),
+        );
       }),
     );
   };
@@ -104,8 +111,9 @@ const UploadItem = ({label, style, dispatch, type, photos}) => {
         }>
         {imageUploaded ? (
           <View style={styles.imageRow}>
-            {photos[type].map((path) => (
+            {photos[type].map((path, index) => (
               <Image
+                key={index.toString()}
                 source={{uri: 'https://www.pointlocals.com' + path}}
                 style={styles.image}
               />

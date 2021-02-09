@@ -99,43 +99,29 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
   dispatch(startLoading);
   try {
     const state = getState();
-    console.log(state.temp);
+    // console.log('state', state.temp.phNo);
 
     var data = new FormData();
     data.append('action', 'add_location');
     data.append('data[userId]', state.uid);
     data.append('data[verified]', '0');
     data.append('data[locationName]', state.temp.locationName);
-    // data.append('data[locationType]', 'business');
-    // data.append('data[homeCategory]', '');
-    // data.append('data[businessCategory]', '2');
-    // data.append('data[products_services][][tag]', 'name');
-    // data.append('data[products_services][][tag]', 'name2');
     data.append('data[locationAddress]', state.temp.address);
     data.append('data[locationPostcode]', state.temp.pinCode);
     data.append('data[locationLong]', state.temp.longitude);
     data.append('data[locationLat]', state.temp.latitude);
-    data.append('data[locationDescription]', state.temp.description);
-    // data.append('data[businesLength]', '157');
+    data.append('data[locationDescription]', state.temp.decription);
     data.append('data[locationFloors]', state.temp.floors);
-    // data.append('data[openFrom]', '');
-    // data.append('data[openTo]', '');
-    // data.append('data[daysOpen]', '');
+    data.append('data[daysOpen]', '');
     data.append('data[Website]', state.temp.website);
-    // data.append('data[workHere]', '0');
-    // data.append('data[liveHere]', '0');
-    // data.append('data[Privacy]', '0');
     data.append('data[mobilePhone]', state.temp.phNo[0]);
     data.append('data[mobileVerified]', '0');
     data.append('data[phoneOne]', state.temp.phNo[1]);
     data.append('data[phoneTwo]', state.temp.phNo[2]);
     data.append('data[Email]', state.temp.email);
-    data.append('data[Created]', new Date());
-    data.append('data[Updated]', new Date());
+    data.append('data[Created]', '1566994108'); //format of date unknown? epochs is not supported
+    data.append('data[Updated]', '1566994108');
     data.append('data[ChangeRequest]', '0');
-    // data.append('data[thecategories][][tag]', 'name');
-    // data.append('data[thecategories][][tag]', 'name2');
-
     state.temp.photos.entrance.forEach((path) =>
       data.append('data[entrancePhotos][]', path),
     );
@@ -146,10 +132,13 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
       data.append('data[fullLookPhotos][]', path),
     );
 
-    const {data: resData} = await axios.post('ajax', data);
+    const res = await axios.post('ajax', data);
+    console.log('Location created successfully');
+    // console.log(res.data);
 
-    console.log(resData);
-
+    dispatch({
+      type: 'RESET_TEMP',
+    });
     callback();
   } catch (err) {
     console.log(err);

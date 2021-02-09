@@ -59,6 +59,15 @@ export default (state = initialState, action) => {
       newState.temp = {...state.temp, ...action.payload};
       return newState;
 
+    case 'RESET_TEMP':
+      return {
+        ...state,
+        temp: {
+          ...initialState.temp,
+          photos: {entrance: [], full: [], interior: []},
+        },
+      };
+
     default:
       return state;
   }
