@@ -41,7 +41,6 @@ const Contact = ({navigation}) => {
           keyboardType="number-pad"
           maxLength={10}
           icon={phoneIcon}
-          // rightComponent={<CustomButton text="Verify" style={styles.verify} />}
         />
         <CustomInput
           value={phNo1}

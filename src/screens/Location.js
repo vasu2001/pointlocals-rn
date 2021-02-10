@@ -5,11 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Iconicons from 'react-native-vector-icons/Ionicons';
 import MapView, {Marker} from 'react-native-maps';
-import RNGooglePlaces from 'react-native-google-places';
 
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
@@ -25,17 +25,17 @@ const initialCoor = {latitude: 17.385, longitude: 78.4867};
 const Location = ({navigation}) => {
   const [accuracy, setAccuracy] = useState(-1);
   const [location, setLocation] = useState({
-    ...initialCoor,
     address: '',
     pinCode: '',
+    latitude: '',
+    longitude: '',
   });
   const [mapLocation, setMapLocation] = useState(initialCoor);
-
   // weird bug with map- requires a style update for showing zoom controls
   const [mapHeight, setMapHeight] = useState(200);
 
   const mapRef = useRef();
-  const addressRef = useRef();
+  // const addressRef = useRef();
   const dispatch = useDispatch();
 
   const setLocationField = (field) => (value) =>
@@ -43,21 +43,6 @@ const Location = ({navigation}) => {
       ...location,
       [field]: value,
     });
-
-  // manually changing lat/long
-  const setMapCoor = (field) => () => {
-    if (location[field] === '') {
-      setLocationField(field)('0');
-    }
-    setMapLocation((mapLocation) => {
-      const newMapLocation = {
-        ...mapLocation,
-        [field]: parseFloat(location[field]),
-      };
-      mapRef.current?.animateCamera({center: newMapLocation});
-      return newMapLocation;
-    });
-  };
 
   const getCurrentLocation = async () => {
     dispatch(startLoading);
@@ -67,63 +52,46 @@ const Location = ({navigation}) => {
         'android.permission.ACCESS_FINE_LOCATION',
         'android.permission.ACCESS_WIFI_STATE',
       ]);
-      const places = await RNGooglePlaces.getCurrentPlace([
-        'address',
-        'location',
-      ]);
-      // console.log(places);
 
-      navigator.geolocation.getCurrentPosition((res) => {
-        // console.log(res);
-        const {accuracy} = res.coords;
-        setAccuracy(Math.round((accuracy + Number.EPSILON) * 10) / 10);
-      });
+      navigator.geolocation.getCurrentPosition(
+        (res) => {
+          // console.log(res);
+          const {accuracy, longitude, latitude} = res.coords;
 
-      setLocation({
-        ...location,
-        ...places[0].location,
-        address: places[0].address,
-      });
-      setMapLocation(places[0].location);
-      mapRef.current?.animateCamera({center: places[0].location});
+          setAccuracy(Math.round((accuracy + Number.EPSILON) * 10) / 10);
+          setLocation({
+            ...location,
+            longitude,
+            latitude,
+          });
+          setMapLocation({longitude, latitude});
+          mapRef.current?.animateCamera({center: {longitude, latitude}});
+
+          dispatch(stopLoading);
+        },
+        (err) => {
+          console.log(err);
+          dispatch(stopLoading);
+          Alert.alert('Error getting location, check if location is enabled');
+        },
+      );
     } catch (err) {
       console.log(err);
+      dispatch(stopLoading);
     }
-
-    dispatch(stopLoading);
-  };
-
-  const changeAddress = () => {
-    RNGooglePlaces.openAutocompleteModal(
-      {
-        initialQuery: location.address,
-      },
-      ['address', 'location'],
-    )
-      .then((place) => {
-        console.log(place);
-
-        setLocation({
-          ...location,
-          address: place.address,
-          ...place.location,
-        });
-        setMapLocation(place.location);
-        mapRef.current?.animateCamera({center: place.location});
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    addressRef.current?.blur();
   };
 
   const onNext = () => {
-    dispatch(
-      addLocation(location, () => {
-        navigation.navigate('Details');
-      }),
-    );
+    if (!location.latitude) {
+      Alert.alert('Use Copy Geolocation Button to update the location');
+    } else if (!location.address) {
+      Alert.alert('Enter address');
+    } else
+      dispatch(
+        addLocation(location, () => {
+          navigation.navigate('Details');
+        }),
+      );
   };
 
   return (
@@ -161,8 +129,6 @@ const Location = ({navigation}) => {
           label="Address*"
           numberOfLines={3}
           icon={locationIcon}
-          onFocus={changeAddress}
-          inputRef={addressRef}
         />
 
         <CustomInput
@@ -185,16 +151,14 @@ const Location = ({navigation}) => {
         </Text>
 
         <CustomButton text="Copy Geolocation" onPress={getCurrentLocation} />
-        <View style={styles.locRow}>
+        <View style={styles.locRow} pointerEvents="none">
           <CustomInput
             value={location.latitude.toString()}
             setValue={setLocationField('latitude')}
             placeholder="Lat*"
             label="Lat*"
             style={styles.locInput}
-            keyboardType="number-pad"
             icon={locationIcon}
-            onEndEditing={setMapCoor('latitude')}
           />
           <CustomInput
             value={location.longitude.toString()}
@@ -202,9 +166,7 @@ const Location = ({navigation}) => {
             placeholder="Long*"
             label="Long*"
             style={styles.locInput}
-            keyboardType="number-pad"
             icon={locationIcon}
-            onEndEditing={setMapCoor('longitude')}
           />
         </View>
       </View>

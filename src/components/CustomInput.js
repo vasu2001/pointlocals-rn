@@ -11,11 +11,7 @@ const CustomInput = ({
   icon,
   numberOfLines,
   keyboardType,
-  rightComponent,
   maxLength,
-  onEndEditing,
-  onFocus,
-  inputRef,
   secureTextEntry,
 }) => {
   return (
@@ -34,14 +30,10 @@ const CustomInput = ({
               multiline: !!numberOfLines,
               keyboardType,
               maxLength,
-              onEndEditing,
-              onFocus,
-              ref: inputRef,
               secureTextEntry,
             }}
           />
         </View>
-        {rightComponent}
       </View>
     </View>
   );

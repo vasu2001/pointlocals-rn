@@ -1,4 +1,4 @@
-import {Alert} from 'react-native';
+import {Alert, ToastAndroid} from 'react-native';
 import axios from '../../utils/axios';
 import {startLoading, stopLoading} from '../../utils/reduxHelpers';
 
@@ -134,6 +134,7 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
 
     const res = await axios.post('ajax', data);
     console.log('Location created successfully');
+    ToastAndroid.show('Location uploaded successfully', ToastAndroid.SHORT);
     // console.log(res.data);
 
     dispatch({
