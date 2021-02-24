@@ -134,8 +134,8 @@ const Location = ({navigation}) => {
         <CustomInput
           value={location.pinCode}
           setValue={setLocationField('pinCode')}
-          placeholder="Pin Code (Post Code)*"
-          label="Pin Code (Post Code)*"
+          placeholder="Pin Code (Post Code)"
+          label="Pin Code (Post Code)"
           keyboardType="number-pad"
           icon={
             <Iconicons

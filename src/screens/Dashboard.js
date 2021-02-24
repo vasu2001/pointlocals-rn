@@ -22,7 +22,10 @@ const Dashboard = ({navigation}) => {
   return (
     <View style={styles.main}>
       <View style={styles.profileSection}>
-        <Image style={styles.photo} source={{uri: serverURL + image}} />
+        <Image
+          style={styles.photo}
+          source={{uri: 'https://www.pointlocals.com' + image}}
+        />
         <Text style={styles.value}>{name}</Text>
         <Text style={styles.value}>{email}</Text>
       </View>

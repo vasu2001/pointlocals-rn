@@ -27,6 +27,7 @@ const initialState = {
     phNo: [null, null, null],
     website: null,
     email: null,
+    type: '',
   },
 };
 

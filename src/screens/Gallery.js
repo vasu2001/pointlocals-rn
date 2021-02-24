@@ -29,18 +29,21 @@ const Gallery = ({navigation}) => {
   const onSubmit = () => {
     if (!tnc) {
       Alert.alert('Accept TnC');
-      return;
-    }
-    dispatch(
-      saveLocation(() => {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: 'Dashboard'}],
-          }),
-        );
-      }),
-    );
+    } else if (photos.full.length === 0) {
+      Alert.alert('Full look photos are mandatory, please upload atleast one.');
+    } else if (photos.entrance.length === 0) {
+      Alert.alert('Entrance photos are mandatory, please upload atleast one.');
+    } else
+      dispatch(
+        saveLocation(() => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Dashboard'}],
+            }),
+          );
+        }),
+      );
   };
 
   return (
@@ -61,7 +64,7 @@ const Gallery = ({navigation}) => {
           photos={photos}
         />
         <UploadItem
-          label="Interior Photos*"
+          label="Interior Photos"
           dispatch={dispatch}
           type="interior"
           photos={photos}
