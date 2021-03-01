@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Iconicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MapView, {Marker} from 'react-native-maps';
 
 import CustomButton from '../components/CustomButton';
@@ -30,12 +31,11 @@ const Location = ({navigation}) => {
     latitude: '',
     longitude: '',
   });
-  const [mapLocation, setMapLocation] = useState(initialCoor);
+  const [mapLocation, setMapLocation] = useState({...initialCoor, heading: 0});
   // weird bug with map- requires a style update for showing zoom controls
   const [mapHeight, setMapHeight] = useState(200);
 
   const mapRef = useRef();
-  // const addressRef = useRef();
   const dispatch = useDispatch();
 
   const setLocationField = (field) => (value) =>
@@ -56,7 +56,7 @@ const Location = ({navigation}) => {
       navigator.geolocation.getCurrentPosition(
         (res) => {
           // console.log(res);
-          const {accuracy, longitude, latitude} = res.coords;
+          const {accuracy, longitude, latitude, heading} = res.coords;
 
           setAccuracy(Math.round((accuracy + Number.EPSILON) * 10) / 10);
           setLocation({
@@ -64,7 +64,7 @@ const Location = ({navigation}) => {
             longitude,
             latitude,
           });
-          setMapLocation({longitude, latitude});
+          setMapLocation({longitude, latitude, heading});
           mapRef.current?.animateCamera({center: {longitude, latitude}});
 
           dispatch(stopLoading);
@@ -73,6 +73,10 @@ const Location = ({navigation}) => {
           console.log(err);
           dispatch(stopLoading);
           Alert.alert('Error getting location, check if location is enabled');
+        },
+        {
+          timeout: 3000,
+          enableHighAccuracy: false,
         },
       );
     } catch (err) {
@@ -108,14 +112,29 @@ const Location = ({navigation}) => {
           zoomControlEnabled
           onMapReady={() => setMapHeight(201)}
           style={[styles.map, {height: mapHeight}]}>
-          <Marker
+          <Marker.Animated
             draggable
+            flat={true}
             coordinate={mapLocation}
+            anchor={{x: 0.5, y: 0.5}}
+            style={{
+              transform: [
+                {
+                  rotateZ: `${mapLocation.heading}deg`,
+                },
+              ],
+            }}
             onDragEnd={(e) => {
               console.log(e.nativeEvent.coordinate);
               setLocation({...location, ...e.nativeEvent.coordinate});
-            }}
-          />
+            }}>
+            <FontAwesome
+              name="location-arrow"
+              size={30}
+              color={'black'}
+              style={{transform: [{rotateZ: '315deg'}]}}
+            />
+          </Marker.Animated>
         </MapView>
 
         <Text style={styles.text}>
