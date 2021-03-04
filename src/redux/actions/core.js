@@ -1,4 +1,6 @@
 import {Alert, ToastAndroid} from 'react-native';
+import RNFetchBlob from 'rn-fetch-blob';
+
 import axios from '../../utils/axios';
 import {startLoading, stopLoading} from '../../utils/reduxHelpers';
 
@@ -31,17 +33,26 @@ export const getUserRecord = () => async (dispatch) => {
 export const uploadImage = (image, type) => async (dispatch) => {
   dispatch(startLoading);
   try {
-    const formData = new FormData();
-    formData.append('action', 'upload_image');
-    formData.append('imageCategory', type);
-    formData.append('api', 1);
-    formData.append('Image', {
-      uri: image.uri,
-      type: image.type,
-      name: image.fileName,
-    });
+    const {data: jsonData} = await RNFetchBlob.fetch(
+      'POST',
+      'https://pointlocals.com/ajax',
+      {},
+      [
+        {name: 'action', data: 'upload_image'},
 
-    const {data} = await axios.post('https://pointlocals.com/ajax', formData);
+        {name: 'imageCategory', data: type},
+        {name: 'api', data: '1'},
+        {
+          name: 'Image',
+          data: RNFetchBlob.wrap(image.uri),
+          filename: image.fileName,
+          type: image.type,
+        },
+      ],
+    );
+    const data = JSON.parse(jsonData);
+
+    // console.log(data);
     dispatch({
       type: 'UPLOAD_IMAGE',
       payload: {
@@ -49,9 +60,9 @@ export const uploadImage = (image, type) => async (dispatch) => {
         path: data.info.path,
       },
     });
-    // console.log(data);
   } catch (err) {
-    console.log(JSON.stringify(err));
+    // console.log(JSON.stringify(err));
+    console.log(err);
   }
   dispatch(stopLoading);
 };

@@ -8,7 +8,6 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {launchCamera} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {CommonActions} from '@react-navigation/native';
 
@@ -17,7 +16,6 @@ import TncRow from '../components/TncRow';
 import {PRIMARY, TEXT} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 import {saveLocation, uploadImage} from '../redux/actions/core';
-import {useEffect} from 'react';
 
 const Gallery = ({navigation}) => {
   const [tnc, setTnc] = useState(false);
@@ -55,6 +53,7 @@ const Gallery = ({navigation}) => {
           dispatch={dispatch}
           type="entrance"
           photos={photos}
+          navigation={navigation}
         />
         <UploadItem
           label="Full Look Photos*"
@@ -62,12 +61,14 @@ const Gallery = ({navigation}) => {
           dispatch={dispatch}
           type="full"
           photos={photos}
+          navigation={navigation}
         />
         <UploadItem
           label="Interior Photos"
           dispatch={dispatch}
           type="interior"
           photos={photos}
+          navigation={navigation}
         />
       </View>
 
@@ -85,7 +86,7 @@ const Gallery = ({navigation}) => {
   );
 };
 
-const UploadItem = ({label, style, dispatch, type, photos}) => {
+const UploadItem = ({label, style, dispatch, type, photos, navigation}) => {
   const callback = (photo) => {
     if (photo.didCancel) {
       console.log('cancel photo picker');
@@ -104,14 +105,7 @@ const UploadItem = ({label, style, dispatch, type, photos}) => {
       <Text style={styles.text}>{label}</Text>
       <TouchableOpacity
         style={styles.uploadButton}
-        onPress={() =>
-          launchCamera(
-            {
-              mediaType: 'photo',
-            },
-            callback,
-          )
-        }>
+        onPress={() => navigation.navigate('Camera', {callback})}>
         {imageUploaded ? (
           <View style={styles.imageRow}>
             {photos[type].map((path, index) => (

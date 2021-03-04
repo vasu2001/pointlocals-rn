@@ -1,3 +1,4 @@
+import {GoogleSignin} from '@react-native-community/google-signin';
 import {LoginManager} from 'react-native-fbsdk';
 import axios from '../../utils/axios';
 import {startLoading, stopLoading} from '../../utils/reduxHelpers';
@@ -37,6 +38,8 @@ export const logout = () => (dispatch, getState) => {
   const {type} = getState();
   if (type === 'facebook') {
     LoginManager.logOut();
+  } else if (type === 'google') {
+    GoogleSignin.signOut();
   }
 
   dispatch({

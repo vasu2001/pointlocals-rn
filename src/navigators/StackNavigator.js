@@ -7,6 +7,7 @@ import MainInfo from '../screens/MainInfo';
 import Details from '../screens/Details';
 import Contact from '../screens/Contact';
 import Gallery from '../screens/Gallery';
+import Camera from '../screens/Camera';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ const StackNavigator = ({}) => (
     <Stack.Screen name="Details" component={Details} />
     <Stack.Screen name="Contact" component={Contact} />
     <Stack.Screen name="Gallery" component={Gallery} />
+    <Stack.Screen name="Camera" component={Camera} />
   </Stack.Navigator>
 );
 
