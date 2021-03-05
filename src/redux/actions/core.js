@@ -98,7 +98,9 @@ export const addLocation = (data, callback) => async (dispatch, getState) => {
       dispatch(addToTemp(data));
       callback();
     } else {
-      Alert.alert('Similar Location exists already');
+      Alert.alert(
+        'The said location cannot be uploaded as Poinlocals already has a similar location in such area',
+      );
     }
   } catch (err) {
     console.log('loaction check error:', err);

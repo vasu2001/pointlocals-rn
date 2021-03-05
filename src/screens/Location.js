@@ -8,8 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import Iconicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapView, {Marker} from 'react-native-maps';
 
 import CustomButton from '../components/CustomButton';
@@ -128,11 +127,12 @@ const Location = ({navigation}) => {
               console.log(e.nativeEvent.coordinate);
               setLocation({...location, ...e.nativeEvent.coordinate});
             }}>
-            <FontAwesome
-              name="location-arrow"
-              size={30}
-              color={'black'}
-              style={{transform: [{rotateZ: '315deg'}]}}
+            <Ionicons
+              name="location-sharp"
+              size={40}
+              color={PRIMARY}
+              // style={{transform: [{rotateZ: '315deg'}]}}
+              style={{opacity: 0.75}}
             />
           </Marker.Animated>
         </MapView>
@@ -157,7 +157,7 @@ const Location = ({navigation}) => {
           label="Pin Code (Post Code)"
           keyboardType="number-pad"
           icon={
-            <Iconicons
+            <Ionicons
               name="md-ellipsis-horizontal-sharp"
               color={PRIMARY}
               size={18}
