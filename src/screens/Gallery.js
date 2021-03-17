@@ -16,6 +16,7 @@ import TncRow from '../components/TncRow';
 import {PRIMARY, TEXT} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 import {saveLocation, uploadImage} from '../redux/actions/core';
+import {serverURL} from '../utils/axios';
 
 const Gallery = ({navigation}) => {
   const [tnc, setTnc] = useState(false);
@@ -111,7 +112,7 @@ const UploadItem = ({label, style, dispatch, type, photos, navigation}) => {
             {photos[type].map((path, index) => (
               <Image
                 key={index.toString()}
-                source={{uri: 'https://www.pointlocals.com' + path}}
+                source={{uri: serverURL + '/' + path}}
                 style={styles.image}
               />
             ))}

@@ -74,8 +74,9 @@ const Location = ({navigation}) => {
           Alert.alert('Error getting location, check if location is enabled');
         },
         {
-          timeout: 3000,
-          enableHighAccuracy: false,
+          timeout: 5000,
+          enableHighAccuracy: true,
+          maximumAge: 1000,
         },
       );
     } catch (err) {
@@ -113,9 +114,9 @@ const Location = ({navigation}) => {
           style={[styles.map, {height: mapHeight}]}>
           <Marker.Animated
             draggable
-            flat={true}
+            // flat={true}
             coordinate={mapLocation}
-            anchor={{x: 0.5, y: 0.5}}
+            anchor={{x: 0.5, y: 1}}
             style={{
               transform: [
                 {

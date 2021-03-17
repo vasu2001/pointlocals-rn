@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useSelector} from 'react-redux';
 
 import {PRIMARY} from '../utils/colors';
 
@@ -17,44 +18,45 @@ const Camera = ({navigation, route}) => {
   const cameraRef = useRef(null);
   const {callback} = route.params;
   const [location, setLocation] = useState(null);
+  const {
+    temp: {latitude, longitude},
+  } = useSelector((state) => state);
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (data) => {
-        // console.log(data);
-        const {
-          coords: {heading, latitude, longitude},
-        } = data;
-        setLocation({
-          GPSImgDirection: heading,
-          GPSLatitude: latitude,
-          GPSLongitude: longitude,
-        });
-      },
-      (err) => {
-        console.log(err);
-        Alert.alert('Error getting location, check if location is enabled');
-      },
-      {
-        timeout: 3000,
-        enableHighAccuracy: false,
-      },
-    );
-  }, []);
+  // useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (data) => {
+  //       // console.log(data);
+  //       const {
+  //         coords: {heading, latitude, longitude},
+  //       } = data;
+  //       setLocation({
+  //         GPSImgDirection: heading,
+  //         GPSLatitude: latitude,
+  //         GPSLongitude: longitude,
+  //       });
+  //     },
+  //     (err) => {
+  //       console.log(err);
+  //       Alert.alert('Error getting location, check if location is enabled');
+  //     },
+  //     {
+  //       timeout: 3000,
+  //       enableHighAccuracy: false,
+  //     },
+  //   );
+  // }, []);
 
   const takePicture = async () => {
     try {
-      if (!location) {
-        Alert.alert('Please wait for the location to record');
-        return;
-      }
-
       if (cameraRef.current) {
         const options = {
           quality: 0.5,
           base64: false,
           exif: true,
-          writeExif: location,
+          writeExif: {
+            GPSLatitude: latitude,
+            GPSLongitude: longitude,
+          },
         };
         const {uri} = await cameraRef.current.takePictureAsync(options);
         // console.log(exif);

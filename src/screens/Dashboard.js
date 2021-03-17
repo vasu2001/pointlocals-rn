@@ -4,10 +4,10 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import CustomButton from '../components/CustomButton';
 import {logout} from '../redux/actions/auth';
-import {serverURL} from '../utils/axios';
 import {PRIMARY, TEXT} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 import {getUserRecord} from '../redux/actions/core';
+import {serverURL} from '../utils/axios';
 
 const {width} = Dimensions.get('screen');
 
@@ -22,10 +22,7 @@ const Dashboard = ({navigation}) => {
   return (
     <View style={styles.main}>
       <View style={styles.profileSection}>
-        <Image
-          style={styles.photo}
-          source={{uri: 'https://www.pointlocals.com' + image}}
-        />
+        <Image style={styles.photo} source={{uri: serverURL + '/' + image}} />
         <Text style={styles.value}>{name}</Text>
         <Text style={styles.value}>{email}</Text>
       </View>

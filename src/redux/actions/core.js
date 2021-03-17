@@ -1,7 +1,7 @@
 import {Alert, ToastAndroid} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
-import axios from '../../utils/axios';
+import axios, {serverURL} from '../../utils/axios';
 import {startLoading, stopLoading} from '../../utils/reduxHelpers';
 
 export const getUserRecord = () => async (dispatch) => {
@@ -16,7 +16,7 @@ export const getUserRecord = () => async (dispatch) => {
       axios.post('/api/totalUploaded'),
     ]);
 
-    console.log({deletedData, verifiedData, totalData});
+    // console.log({deletedData, verifiedData, totalData});
     dispatch({
       type: 'USER_RECORD',
       payload: {
@@ -35,7 +35,7 @@ export const uploadImage = (image, type) => async (dispatch) => {
   try {
     const {data: jsonData} = await RNFetchBlob.fetch(
       'POST',
-      'https://pointlocals.com/ajax',
+      serverURL + '/ajax',
       {},
       [
         {name: 'action', data: 'upload_image'},
@@ -43,13 +43,14 @@ export const uploadImage = (image, type) => async (dispatch) => {
         {name: 'imageCategory', data: type},
         {name: 'api', data: '1'},
         {
-          name: 'Image',
+          name: 'Image[]',
           data: RNFetchBlob.wrap(image.uri),
           filename: image.fileName,
           type: image.type,
         },
       ],
     );
+    // console.log(jsonData.substring(0, 500));
     const data = JSON.parse(jsonData);
 
     // console.log(data);
@@ -88,7 +89,7 @@ export const addLocation = (data, callback) => async (dispatch, getState) => {
     formData.append('name', locationName);
 
     const {data: similarData} = await axios.post(
-      'https://staging.pointlocals.com/api/locationCheck',
+      '/api/locationCheck',
       formData,
     );
     // console.log(similarData);
@@ -103,7 +104,7 @@ export const addLocation = (data, callback) => async (dispatch, getState) => {
       );
     }
   } catch (err) {
-    console.log('loaction check error:', err);
+    console.log('location check error:', err);
   }
   dispatch(stopLoading);
 };
@@ -116,36 +117,40 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
 
     var data = new FormData();
     data.append('action', 'add_location');
-    data.append('data[userId]', state.uid);
+    data.append('data[userId]', state.uid.toString());
     data.append('data[verified]', '0');
-    data.append('data[locationName]', state.temp.locationName);
-    data.append('data[locationAddress]', state.temp.address);
-    data.append('data[locationPostcode]', state.temp.pinCode);
-    data.append('data[locationLong]', state.temp.longitude);
-    data.append('data[locationLat]', state.temp.latitude);
-    data.append('data[locationDescription]', state.temp.decription);
-    data.append('data[locationFloors]', state.temp.floors);
+    data.append('data[locationName]', state.temp.locationName.toString());
+    data.append('data[locationAddress]', state.temp.address.toString());
+    data.append('data[locationPostcode]', state.temp.pinCode.toString());
+    data.append('data[locationLong]', state.temp.longitude.toString());
+    data.append('data[locationLat]', state.temp.latitude.toString());
+    data.append('data[locationDescription]', state.temp.description.toString());
+    data.append('data[locationFloors]', state.temp.floors.toString());
     data.append('data[daysOpen]', '');
-    data.append('data[Website]', state.temp.website);
-    data.append('data[mobilePhone]', state.temp.phNo[0]);
+    data.append('data[Website]', state.temp.website.toString());
+    data.append('data[mobilePhone]', state.temp.phNo[0].toString());
     data.append('data[mobileVerified]', '0');
-    data.append('data[phoneOne]', state.temp.phNo[1]);
-    data.append('data[phoneTwo]', state.temp.phNo[2]);
-    data.append('data[Email]', state.temp.email);
+    data.append('data[phoneOne]', state.temp.phNo[1].toString());
+    data.append('data[phoneTwo]', state.temp.phNo[2].toString());
+    data.append('data[Email]', state.temp.email.toString());
     data.append('data[Created]', '1566994108'); //format of date unknown? epochs is not supported
     data.append('data[Updated]', '1566994108');
     data.append('data[ChangeRequest]', '0');
     state.temp.photos.entrance.forEach((path) =>
-      data.append('data[entrancePhotos][]', path),
+      data.append('data[entrancePhotos][]', path.toString()),
     );
     state.temp.photos.interior.forEach((path) =>
-      data.append('data[interiorPhotos][]', path),
+      data.append('data[interiorPhotos][]', path.toString()),
     );
     state.temp.photos.full.forEach((path) =>
-      data.append('data[fullLookPhotos][]', path),
+      data.append('data[fullLookPhotos][]', path.toString()),
     );
 
-    const res = await axios.post('ajax', data);
+    const res = await axios.post('/ajax', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     console.log('Location created successfully');
     ToastAndroid.show('Location uploaded successfully', ToastAndroid.SHORT);
     // console.log(res.data);
@@ -156,6 +161,7 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
     callback();
   } catch (err) {
     console.log(err);
+    // console.log(JSON.stringify(err));
   }
   dispatch(stopLoading);
 };
