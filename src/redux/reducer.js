@@ -42,7 +42,13 @@ export default (state = initialState, action) => {
     case 'LOGIN':
       return {...state, ...action.payload, loggedIn: true};
     case 'LOGOUT':
-      return initialState;
+      return {
+        ...initialState,
+        temp: {
+          ...initialState.temp,
+          photos: {entrance: [], full: [], interior: []},
+        },
+      };
 
     case 'USER_RECORD':
       return {...state, locations: action.payload};
