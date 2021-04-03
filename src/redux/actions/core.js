@@ -50,7 +50,7 @@ export const uploadImage = (image, type) => async (dispatch) => {
         },
       ],
     );
-    // console.log(jsonData.substring(0, 500));
+    console.log(jsonData.substring(0, 500));
     const data = JSON.parse(jsonData);
 
     console.log(data);
@@ -120,6 +120,7 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
     data.append('action', 'add_location');
     data.append('data[userId]', state.uid.toString());
     data.append('data[verified]', '0');
+    data.append('data[locationType]', 'business');
     data.append('data[locationName]', state.temp.locationName.toString());
     data.append('data[locationAddress]', state.temp.address.toString());
     data.append('data[locationPostcode]', state.temp.pinCode.toString());

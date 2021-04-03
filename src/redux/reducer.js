@@ -75,6 +75,15 @@ export default (state = initialState, action) => {
         },
       };
 
+    case 'DELETE_IMAGE':
+      newState = {...state};
+      newState.temp.photos[action.payload.type] = [
+        ...newState.temp.photos[action.payload.type].filter(
+          (_, i) => i !== action.payload.index,
+        ),
+      ];
+      return newState;
+
     default:
       return state;
   }

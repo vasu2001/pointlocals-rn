@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {CommonActions} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import CustomButton from '../components/CustomButton';
 import TncRow from '../components/TncRow';
@@ -99,6 +100,16 @@ const UploadItem = ({label, style, dispatch, type, photos, navigation}) => {
     }
   };
 
+  const deletePhoto = (index) => () => {
+    dispatch({
+      type: 'DELETE_IMAGE',
+      payload: {
+        type,
+        index,
+      },
+    });
+  };
+
   const imageUploaded = photos[type].length > 0;
 
   return (
@@ -110,11 +121,14 @@ const UploadItem = ({label, style, dispatch, type, photos, navigation}) => {
         {imageUploaded ? (
           <View style={styles.imageRow}>
             {photos[type].map((path, index) => (
-              <Image
-                key={index.toString()}
-                source={{uri: serverURL + '/' + path}}
-                style={styles.image}
-              />
+              <TouchableOpacity onPress={deletePhoto(index)}>
+                <Image
+                  key={index.toString()}
+                  source={{uri: serverURL + '/' + path}}
+                  style={styles.image}
+                />
+                <AntDesign name="close" style={styles.close} />
+              </TouchableOpacity>
             ))}
             <Text style={styles.uploadMore}>Tap here to{'\n'}upload more</Text>
           </View>
@@ -181,6 +195,17 @@ const styles = StyleSheet.create({
   },
   submit: {
     marginLeft: 10,
+  },
+
+  close: {
+    fontSize: 15,
+    color: 'white',
+    backgroundColor: PRIMARY,
+    position: 'absolute',
+    top: 0,
+    right: -5,
+    padding: 5,
+    borderRadius: 15,
   },
 });
 
