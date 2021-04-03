@@ -4,7 +4,7 @@ import {StatusBar} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import Geolocation from 'react-native-geolocation-service';
+import RNLocation from 'react-native-location';
 
 import Main from './src/navigators/Main';
 import {persistor, store} from './src/redux/store';
@@ -24,8 +24,13 @@ const App = () => {
 
   useEffect(() => {
     SplashScreen.hide();
-    Geolocation.setRNConfiguration({});
-    navigator.geolocation = Geolocation;
+    RNLocation.configure({
+      desiredAccuracy: {
+        ios: 'bestForNavigation',
+        android: 'highAccuracy',
+      },
+      interval: 500, // Milliseconds
+    });
   }, []);
 
   return (

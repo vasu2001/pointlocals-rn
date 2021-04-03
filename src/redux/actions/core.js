@@ -53,7 +53,7 @@ export const uploadImage = (image, type) => async (dispatch) => {
     // console.log(jsonData.substring(0, 500));
     const data = JSON.parse(jsonData);
 
-    // console.log(data);
+    console.log(data);
     dispatch({
       type: 'UPLOAD_IMAGE',
       payload: {
@@ -82,10 +82,11 @@ export const addLocation = (data, callback) => async (dispatch, getState) => {
     const {
       temp: {locationName},
     } = getState();
+    const {latitude, longitude} = data;
 
     const formData = new FormData();
-    formData.append('lat', data.latitude);
-    formData.append('lon', data.longitude);
+    formData.append('lat', latitude);
+    formData.append('lon', longitude);
     formData.append('name', locationName);
 
     const {data: similarData} = await axios.post(

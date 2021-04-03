@@ -19,7 +19,7 @@ const Camera = ({navigation, route}) => {
   const {callback} = route.params;
   const [location, setLocation] = useState(null);
   const {
-    temp: {latitude, longitude},
+    temp: {latitude, longitude, heading},
   } = useSelector((state) => state);
 
   // useEffect(() => {
@@ -56,10 +56,11 @@ const Camera = ({navigation, route}) => {
           writeExif: {
             GPSLatitude: latitude,
             GPSLongitude: longitude,
+            GPSImgDirection: heading,
+            GPSImgDirectionRef: 'T',
           },
         };
         const {uri} = await cameraRef.current.takePictureAsync(options);
-        // console.log(exif);
 
         callback({
           uri,

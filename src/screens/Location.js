@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   Text,
   View,
@@ -10,6 +10,7 @@ import {
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapView, {Marker} from 'react-native-maps';
+import RNLocation from 'react-native-location';
 
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
@@ -17,24 +18,25 @@ import {PRIMARY} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 import {useDispatch} from 'react-redux';
 import {startLoading, stopLoading} from '../utils/reduxHelpers';
-import {addLocation} from '../redux/actions/core';
+import {addLocation, addToTemp} from '../redux/actions/core';
 
-//distanceDelta = Math.exp(Math.log(360) - (zoom * Math.LN2));
 const initialCoor = {latitude: 17.385, longitude: 78.4867};
 
 const Location = ({navigation}) => {
-  const [accuracy, setAccuracy] = useState(-1);
+  const [accuracy, setAccuracy] = useState(Infinity);
   const [location, setLocation] = useState({
     address: '',
     pinCode: '',
-    latitude: '',
-    longitude: '',
+    latitude: '17.385',
+    longitude: '78.4867',
+    heading: '',
   });
-  const [mapLocation, setMapLocation] = useState({...initialCoor, heading: 0});
   // weird bug with map- requires a style update for showing zoom controls
   const [mapHeight, setMapHeight] = useState(200);
+  const [blinkOpacity, setBlinkOpacity] = useState(1);
 
   const mapRef = useRef();
+  const blinkRef = useRef(0);
   const dispatch = useDispatch();
 
   const setLocationField = (field) => (value) =>
@@ -43,60 +45,60 @@ const Location = ({navigation}) => {
       [field]: value,
     });
 
-  const getCurrentLocation = async () => {
-    dispatch(startLoading);
-
-    try {
-      await PermissionsAndroid.requestMultiple([
-        'android.permission.ACCESS_FINE_LOCATION',
-        'android.permission.ACCESS_WIFI_STATE',
-      ]);
-
-      navigator.geolocation.getCurrentPosition(
-        (res) => {
-          // console.log(res);
-          const {accuracy, longitude, latitude, heading} = res.coords;
-
-          setAccuracy(Math.round((accuracy + Number.EPSILON) * 10) / 10);
-          setLocation({
-            ...location,
-            longitude,
-            latitude,
-          });
-          setMapLocation({longitude, latitude, heading});
-          mapRef.current?.animateCamera({center: {longitude, latitude}});
-
-          dispatch(stopLoading);
-        },
-        (err) => {
-          console.log(err);
-          dispatch(stopLoading);
-          Alert.alert('Error getting location, check if location is enabled');
-        },
-        {
-          timeout: 5000,
-          enableHighAccuracy: true,
-          maximumAge: 1000,
-        },
-      );
-    } catch (err) {
-      console.log(err);
-      dispatch(stopLoading);
-    }
+  const startBlinking = () => {
+    const interval = setInterval(() => {
+      // console.log(blinkRef.current);
+      if (blinkRef.current === 4) {
+        blinkRef.current = 0;
+        clearInterval(interval);
+      } else {
+        setBlinkOpacity((o) => (o ? 0 : 1));
+        blinkRef.current++;
+      }
+    }, 250);
   };
 
   const onNext = () => {
-    if (!location.latitude) {
-      Alert.alert('Use Copy Geolocation Button to update the location');
+    if (accuracy > 10) {
+      startBlinking();
+      // Alert.alert('Minimum accuracy required is 10 meters');
     } else if (!location.address) {
       Alert.alert('Enter address');
-    } else
+    } else {
       dispatch(
         addLocation(location, () => {
           navigation.navigate('Details');
         }),
       );
+    }
   };
+
+  useEffect(() => {
+    let unsubscribeLocation;
+
+    PermissionsAndroid.requestMultiple([
+      'android.permission.ACCESS_FINE_LOCATION',
+      'android.permission.ACCESS_WIFI_STATE',
+    ]).then(() => {
+      unsubscribeLocation = RNLocation.subscribeToLocationUpdates((res) => {
+        // console.log(res);
+        const {accuracy, longitude, latitude, heading} = res[0];
+
+        setAccuracy(Math.round((accuracy + Number.EPSILON) * 10) / 10);
+        setLocation((location) => ({
+          ...location,
+          longitude,
+          latitude,
+          heading,
+        }));
+        mapRef.current?.animateCamera({center: {longitude, latitude}});
+      });
+    });
+
+    return () => {
+      unsubscribeLocation?.();
+    };
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.main}>
@@ -113,34 +115,19 @@ const Location = ({navigation}) => {
           onMapReady={() => setMapHeight(201)}
           style={[styles.map, {height: mapHeight}]}>
           <Marker.Animated
-            draggable
-            // flat={true}
-            coordinate={mapLocation}
-            anchor={{x: 0.5, y: 1}}
-            style={{
-              transform: [
-                {
-                  rotateZ: `${mapLocation.heading}deg`,
-                },
-              ],
+            coordinate={{
+              latitude: parseFloat(location.latitude),
+              longitude: parseFloat(location.longitude),
             }}
-            onDragEnd={(e) => {
-              console.log(e.nativeEvent.coordinate);
-              setLocation({...location, ...e.nativeEvent.coordinate});
-            }}>
+            anchor={{x: 0.5, y: 1}}>
             <Ionicons
               name="location-sharp"
               size={40}
               color={PRIMARY}
-              // style={{transform: [{rotateZ: '315deg'}]}}
               style={{opacity: 0.75}}
             />
           </Marker.Animated>
         </MapView>
-
-        <Text style={styles.text}>
-          Select a point in the map or enter manually below.
-        </Text>
 
         <CustomInput
           value={location.address}
@@ -167,10 +154,16 @@ const Location = ({navigation}) => {
           }
         />
         <Text style={styles.locationAcc}>
-          Location Accuracy: {accuracy > 0 && accuracy + ' m'}
+          Location Accuracy: {accuracy < Infinity && accuracy + ' m'}
         </Text>
 
-        <CustomButton text="Copy Geolocation" onPress={getCurrentLocation} />
+        <Text style={[styles.minAccuracy, {opacity: blinkOpacity}]}>
+          <Text style={styles.bold}> Minimum accuracy required is 10 m.</Text>
+          {'\n'}
+          Kindly stay near the entrance of your business location and open to
+          the sky for few seconds to get higher accuracy.
+        </Text>
+
         <View style={styles.locRow} pointerEvents="none">
           <CustomInput
             value={location.latitude.toString()}
@@ -218,7 +211,15 @@ const styles = StyleSheet.create({
   locationAcc: {
     alignSelf: 'center',
     marginTop: -5,
-    marginBottom: 15,
+    marginBottom: 5,
+  },
+  minAccuracy: {
+    textAlign: 'center',
+    marginBottom: 5,
+    color: PRIMARY,
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 
   locRow: {
@@ -234,7 +235,7 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     backgroundColor: 'lightgray',
-    marginBottom: 5,
+    marginBottom: 15,
   },
 
   bottom: {
