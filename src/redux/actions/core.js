@@ -154,13 +154,12 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
       },
     });
     console.log('Location created successfully');
-    ToastAndroid.show('Location uploaded successfully', ToastAndroid.SHORT);
-    // console.log(res.data);
+    // ToastAndroid.show('Location uploaded successfully', ToastAndroid.SHORT);
 
     dispatch({
       type: 'RESET_TEMP',
     });
-    callback();
+    callback(res.data.info.url);
   } catch (err) {
     console.log(err);
     // console.log(JSON.stringify(err));

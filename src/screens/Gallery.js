@@ -35,11 +35,11 @@ const Gallery = ({navigation}) => {
       Alert.alert('Entrance photos are mandatory, please upload atleast one.');
     } else
       dispatch(
-        saveLocation(() => {
+        saveLocation((url) => {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{name: 'Dashboard'}],
+              routes: [{name: 'Success', params: {url}}],
             }),
           );
         }),

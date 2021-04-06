@@ -1,6 +1,14 @@
-import React, {useEffect} from 'react';
-import {Text, View, StyleSheet, Dimensions, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import CustomButton from '../components/CustomButton';
 import {logout} from '../redux/actions/auth';
@@ -8,52 +16,83 @@ import {PRIMARY, TEXT} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 import {getUserRecord} from '../redux/actions/core';
 import {serverURL} from '../utils/axios';
+import UrlModal from '../components/UrlModal';
 
 const {width} = Dimensions.get('screen');
 
 const Dashboard = ({navigation}) => {
   const {name, email, image, locations} = useSelector((state) => state);
   const dispatch = useDispatch();
+  const [modal, setModal] = useState({visible: false, type: 'Facebook'});
+
+  const profiles = [
+    {name: 'Facebook', entered: false},
+    {name: 'Instagram', entered: false},
+    {name: 'Twitter', entered: false},
+  ];
 
   useEffect(() => {
     dispatch(getUserRecord());
   }, []);
 
   return (
-    <View style={styles.main}>
-      <View style={styles.profileSection}>
-        <Image style={styles.photo} source={{uri: serverURL + '/' + image}} />
-        <Text style={styles.value}>{name}</Text>
-        <Text style={styles.value}>{email}</Text>
+    <>
+      <View style={styles.main}>
+        <View style={styles.profileSection}>
+          <Image style={styles.photo} source={{uri: serverURL + '/' + image}} />
+          <Text style={styles.value}>{name}</Text>
+          <Text style={styles.value}>{email}</Text>
+        </View>
+
+        <View style={styles.cardContainer}>
+          <View style={[boxStyle, styles.card]}>
+            <Text style={styles.label}>Locations Uploaded</Text>
+            <Text style={styles.value}>{locations.uploaded}</Text>
+          </View>
+          <View style={[boxStyle, styles.card]}>
+            <Text style={styles.label}>Locations Verified</Text>
+            <Text style={styles.value}>{locations.verified}</Text>
+          </View>
+          <View style={[boxStyle, styles.card]}>
+            <Text style={styles.label}>Locations Deleted</Text>
+            <Text style={styles.value}>{locations.deleted}</Text>
+          </View>
+        </View>
+
+        <CustomButton
+          text="Add a new location"
+          style={styles.addLoc}
+          onPress={() => navigation.navigate('Add Location')}
+        />
+
+        <Text style={styles.profileHead}>Enter your profile</Text>
+        <View style={styles.profileRow}>
+          {profiles.map(({name, entered}) => (
+            <TouchableOpacity
+              disabled={entered}
+              style={styles.profilebutton}
+              onPress={() => setModal({visible: true, type: name})}>
+              <Ionicons
+                name={'logo-' + name.toLowerCase()}
+                size={25}
+                color={entered ? 'grey' : 'black'}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <CustomButton
+          text="Logout"
+          style={styles.logout}
+          onPress={() => dispatch(logout())}
+        />
       </View>
-
-      <View style={styles.cardContainer}>
-        <View style={[boxStyle, styles.card]}>
-          <Text style={styles.label}>Locations Uploaded</Text>
-          <Text style={styles.value}>{locations.uploaded}</Text>
-        </View>
-        <View style={[boxStyle, styles.card]}>
-          <Text style={styles.label}>Locations Verified</Text>
-          <Text style={styles.value}>{locations.verified}</Text>
-        </View>
-        <View style={[boxStyle, styles.card]}>
-          <Text style={styles.label}>Locations Deleted</Text>
-          <Text style={styles.value}>{locations.deleted}</Text>
-        </View>
-      </View>
-
-      <CustomButton
-        text="Add a new location"
-        style={styles.addLoc}
-        onPress={() => navigation.navigate('Add Location')}
+      <UrlModal
+        visible={modal.visible}
+        setVisible={(visible) => setModal({...modal, visible})}
+        type={modal.type}
       />
-
-      <CustomButton
-        text="Logout"
-        style={styles.logout}
-        onPress={() => dispatch(logout())}
-      />
-    </View>
+    </>
   );
 };
 
@@ -113,6 +152,22 @@ const styles = StyleSheet.create({
   logout: {
     position: 'absolute',
     bottom: 20,
+  },
+
+  profileHead: {
+    marginTop: 15,
+    fontSize: 20,
+    alignSelf: 'center',
+    color: PRIMARY,
+  },
+  profileRow: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    marginHorizontal: 5,
+  },
+  profilebutton: {
+    padding: 5,
+    marginHorizontal: 5,
   },
 });
 

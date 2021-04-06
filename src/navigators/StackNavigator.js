@@ -8,6 +8,7 @@ import Details from '../screens/Details';
 import Contact from '../screens/Contact';
 import Gallery from '../screens/Gallery';
 import Camera from '../screens/Camera';
+import Success from '../screens/Success';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ const StackNavigator = ({}) => (
     <Stack.Screen name="Contact" component={Contact} />
     <Stack.Screen name="Gallery" component={Gallery} />
     <Stack.Screen name="Camera" component={Camera} />
+    <Stack.Screen name="Success" component={Success} />
   </Stack.Navigator>
 );
 
