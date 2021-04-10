@@ -28,6 +28,7 @@ const initialState = {
     website: '',
     email: '',
     type: '',
+    social: '',
   },
 };
 
@@ -83,6 +84,9 @@ export default (state = initialState, action) => {
         ),
       ];
       return newState;
+
+    case 'UPDATE_SOCIAL':
+      return {...state, social: action.payload};
 
     default:
       return state;

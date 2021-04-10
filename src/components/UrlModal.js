@@ -11,20 +11,26 @@ import {PRIMARY} from '../utils/colors';
 import CustomButton from './CustomButton';
 import CustomInput from './CustomInput';
 
-const UrlModal = ({type, visible, setVisible}) => {
-  const [input, setInput] = useState('');
+const UrlModal = ({visible, setVisible, onSave, initValue = ''}) => {
+  const [input, setInput] = useState(initValue);
 
   return (
     <Modal transparent animationType="fade" visible={visible}>
       <View style={styles.backdrop}>
-        <TouchableWithoutFeedback onPress={() => setVisible(false)}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setInput(initValue);
+            setVisible(false);
+          }}>
           <View style={styles.main} />
         </TouchableWithoutFeedback>
       </View>
 
       <View style={styles.main}>
         <View style={styles.dialog}>
-          <Text style={styles.title}>Enter {type} profile URL</Text>
+          <Text style={styles.title}>
+            {initValue === '' ? 'Enter' : 'Update'} your profile
+          </Text>
           <CustomInput
             value={input}
             setValue={setInput}
@@ -32,7 +38,13 @@ const UrlModal = ({type, visible, setVisible}) => {
             style={styles.input}
           />
 
-          <CustomButton text="Save" onPress={() => setVisible(false)} />
+          <CustomButton
+            text="Save"
+            onPress={() => {
+              onSave(input);
+              // setVisible(false);
+            }}
+          />
         </View>
       </View>
     </Modal>

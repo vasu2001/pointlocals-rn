@@ -14,22 +14,16 @@ import CustomButton from '../components/CustomButton';
 import {logout} from '../redux/actions/auth';
 import {PRIMARY, TEXT} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
-import {getUserRecord} from '../redux/actions/core';
+import {getUserRecord, updateSocial} from '../redux/actions/core';
 import {serverURL} from '../utils/axios';
 import UrlModal from '../components/UrlModal';
 
 const {width} = Dimensions.get('screen');
 
 const Dashboard = ({navigation}) => {
-  const {name, email, image, locations} = useSelector((state) => state);
+  const {name, email, image, locations, social} = useSelector((state) => state);
   const dispatch = useDispatch();
-  const [modal, setModal] = useState({visible: false, type: 'Facebook'});
-
-  const profiles = [
-    {name: 'Facebook', entered: false},
-    {name: 'Instagram', entered: false},
-    {name: 'Twitter', entered: false},
-  ];
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     dispatch(getUserRecord());
@@ -65,21 +59,22 @@ const Dashboard = ({navigation}) => {
           onPress={() => navigation.navigate('Add Location')}
         />
 
-        <Text style={styles.profileHead}>Enter your profile</Text>
-        <View style={styles.profileRow}>
-          {profiles.map(({name, entered}) => (
-            <TouchableOpacity
-              disabled={entered}
-              style={styles.profilebutton}
-              onPress={() => setModal({visible: true, type: name})}>
+        <TouchableOpacity
+          style={styles.profileTouch}
+          onPress={() => setModal(true)}>
+          <Text style={styles.profileHead}>
+            {social === '' ? 'Enter' : 'Update'} your profile
+          </Text>
+          <View style={styles.profileRow}>
+            {['facebook', 'instagram', 'twitter'].map((name) => (
               <Ionicons
-                name={'logo-' + name.toLowerCase()}
+                name={'logo-' + name}
                 size={25}
-                color={entered ? 'grey' : 'black'}
+                style={styles.profilebutton}
               />
-            </TouchableOpacity>
-          ))}
-        </View>
+            ))}
+          </View>
+        </TouchableOpacity>
 
         <CustomButton
           text="Logout"
@@ -88,9 +83,16 @@ const Dashboard = ({navigation}) => {
         />
       </View>
       <UrlModal
-        visible={modal.visible}
-        setVisible={(visible) => setModal({...modal, visible})}
-        type={modal.type}
+        visible={modal}
+        setVisible={setModal}
+        initValue={social}
+        onSave={(social) => {
+          dispatch(
+            updateSocial(social, () => {
+              setModal(false);
+            }),
+          );
+        }}
       />
     </>
   );
@@ -154,10 +156,12 @@ const styles = StyleSheet.create({
     bottom: 20,
   },
 
-  profileHead: {
+  profileTouch: {
     marginTop: 15,
-    fontSize: 20,
     alignSelf: 'center',
+  },
+  profileHead: {
+    fontSize: 20,
     color: PRIMARY,
   },
   profileRow: {

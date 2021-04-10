@@ -19,6 +19,7 @@ export const login = ({username, password, type, extId}) => async (
     if (type === 'google' || type === 'facebook') {
       formData.append('extId', extId);
     }
+    // console.log(formData);
 
     const {data} = await axios.post('/api/login', formData);
 
@@ -32,7 +33,7 @@ export const login = ({username, password, type, extId}) => async (
       if (type === 'facebook') LoginManager.logOut();
       else if (type === 'google') GoogleSignin.signOut();
 
-      throw data?.message;
+      throw data;
     }
 
     // console.log(data);

@@ -166,3 +166,27 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
   }
   dispatch(stopLoading);
 };
+
+export const updateSocial = (social, callback) => async (dispatch) => {
+  dispatch(startLoading);
+  try {
+    const formData = new FormData();
+    formData.append('url', social);
+
+    const res = await axios.post('/api/updateSocial', formData);
+    // console.log(res.data);
+    if (res.data.status == 200) {
+      dispatch({
+        type: 'UPDATE_SOCIAL',
+        payload: social,
+      });
+      callback();
+    } else {
+      throw res.data;
+    }
+  } catch (err) {
+    console.log(err);
+    // console.log(JSON.stringify(err));
+  }
+  dispatch(stopLoading);
+};
