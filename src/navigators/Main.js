@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Modal, StyleSheet, ActivityIndicator} from 'react-native';
 import {useSelector} from 'react-redux';
+import ErrorModal from '../components/ErrorModal';
 
 import Auth from '../screens/Auth';
 import {PRIMARY} from '../utils/colors';
@@ -18,6 +19,8 @@ const Main = ({}) => {
           <ActivityIndicator color={PRIMARY} animating size={50} />
         </View>
       </Modal>
+
+      <ErrorModal />
     </>
   );
 };

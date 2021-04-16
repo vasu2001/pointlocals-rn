@@ -29,6 +29,12 @@ const Dashboard = ({navigation}) => {
     dispatch(getUserRecord());
   }, []);
 
+  const onAddLoc = () => {
+    if (social === '') {
+      navigator.alert('Kindly add your social profile url');
+    } else navigation.navigate('Add Location');
+  };
+
   return (
     <>
       <View style={styles.main}>
@@ -56,15 +62,15 @@ const Dashboard = ({navigation}) => {
         <CustomButton
           text="Add a new location"
           style={styles.addLoc}
-          onPress={() => navigation.navigate('Add Location')}
+          onPress={onAddLoc}
         />
 
+        <Text style={styles.profileHead}>
+          {social === '' ? 'Enter' : 'Update'} any of your social profile url
+        </Text>
         <TouchableOpacity
-          style={styles.profileTouch}
+          style={[boxStyle, styles.profileTouch]}
           onPress={() => setModal(true)}>
-          <Text style={styles.profileHead}>
-            {social === '' ? 'Enter' : 'Update'} your profile
-          </Text>
           <View style={styles.profileRow}>
             {['facebook', 'instagram', 'twitter'].map((name) => (
               <Ionicons
@@ -131,15 +137,16 @@ const styles = StyleSheet.create({
   },
   card: {
     width: width / 2 - 30,
-    // height: width / 2 - 10,
     alignItems: 'center',
     justifyContent: 'center',
     margin: 5,
+    overflow: 'hidden',
   },
   label: {
     fontSize: 15,
     margin: 1,
     color: TEXT,
+    textAlign: 'center',
   },
   value: {
     fontSize: 15,
@@ -156,13 +163,15 @@ const styles = StyleSheet.create({
     bottom: 20,
   },
 
-  profileTouch: {
-    marginTop: 15,
-    alignSelf: 'center',
-  },
   profileHead: {
     fontSize: 20,
     color: PRIMARY,
+    marginTop: 15,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  profileTouch: {
+    alignSelf: 'center',
   },
   profileRow: {
     alignSelf: 'center',

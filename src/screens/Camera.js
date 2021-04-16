@@ -1,11 +1,5 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Alert,
-} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
@@ -21,30 +15,6 @@ const Camera = ({navigation, route}) => {
   const {
     temp: {latitude, longitude, heading},
   } = useSelector((state) => state);
-
-  // useEffect(() => {
-  //   navigator.geolocation.getCurrentPosition(
-  //     (data) => {
-  //       // console.log(data);
-  //       const {
-  //         coords: {heading, latitude, longitude},
-  //       } = data;
-  //       setLocation({
-  //         GPSImgDirection: heading,
-  //         GPSLatitude: latitude,
-  //         GPSLongitude: longitude,
-  //       });
-  //     },
-  //     (err) => {
-  //       console.log(err);
-  //       Alert.alert('Error getting location, check if location is enabled');
-  //     },
-  //     {
-  //       timeout: 3000,
-  //       enableHighAccuracy: false,
-  //     },
-  //   );
-  // }, []);
 
   const takePicture = async () => {
     try {

@@ -17,8 +17,7 @@ import CustomInput from '../components/CustomInput';
 import {PRIMARY} from '../utils/colors';
 import {boxStyle} from '../utils/styles';
 import {useDispatch} from 'react-redux';
-import {startLoading, stopLoading} from '../utils/reduxHelpers';
-import {addLocation, addToTemp} from '../redux/actions/core';
+import {addLocation} from '../redux/actions/core';
 
 const initialCoor = {latitude: 17.385, longitude: 78.4867};
 
@@ -61,9 +60,8 @@ const Location = ({navigation}) => {
   const onNext = () => {
     if (accuracy > 10) {
       startBlinking();
-      // Alert.alert('Minimum accuracy required is 10 meters');
     } else if (!location.address) {
-      Alert.alert('Enter address');
+      navigator.alert('Enter address');
     } else {
       dispatch(
         addLocation(location, () => {

@@ -13,10 +13,10 @@ import Clipboard from '@react-native-clipboard/clipboard';
 
 import CustomButton from '../components/CustomButton';
 import {PRIMARY} from '../utils/colors';
+import {useSelector} from 'react-redux';
 
-const Success = ({navigation, route}) => {
-  const {url} = route.params;
-  console.log(url);
+const Success = ({navigation}) => {
+  const url = useSelector((state) => state.shareURL);
 
   const handler = () => {
     navigation.dispatch(
@@ -55,6 +55,9 @@ const Success = ({navigation, route}) => {
       <CustomButton text="Copy Link" style={styles.copy} onPress={onCopy} />
       <CustomButton text="Share Link" style={styles.copy} onPress={onShare} />
       <CustomButton text="Go to Dashboard" onPress={handler} />
+      <Text style={styles.note}>
+        Note: You will receive Rs.6 after verification within 2 to 6 days.
+      </Text>
     </View>
   );
 };
@@ -76,9 +79,14 @@ const styles = StyleSheet.create({
   url: {
     color: '#000000a0',
     marginTop: 20,
-    marginBottom: 80,
+    marginBottom: 120,
     textAlign: 'center',
   },
+  note: {
+    color: '#000000a0',
+    marginTop: 20,
+  },
+
   copy: {
     marginBottom: 15,
   },

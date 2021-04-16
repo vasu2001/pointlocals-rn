@@ -10,6 +10,7 @@ const initialState = {
     uploaded: -1,
     verified: -1,
   },
+  shareURL: '',
   temp: {
     photos: {
       entrance: [],
@@ -29,6 +30,10 @@ const initialState = {
     email: '',
     type: '',
     social: '',
+  },
+  error: {
+    visible: false,
+    message: '',
   },
 };
 
@@ -53,6 +58,9 @@ export default (state = initialState, action) => {
 
     case 'USER_RECORD':
       return {...state, locations: action.payload};
+
+    case 'SHARE_URL':
+      return {...state, shareURL: action.payload};
 
     case 'UPLOAD_IMAGE':
       newState = {...state};
@@ -87,6 +95,9 @@ export default (state = initialState, action) => {
 
     case 'UPDATE_SOCIAL':
       return {...state, social: action.payload};
+
+    case 'UPDATE_ERROR':
+      return {...state, error: action.payload};
 
     default:
       return state;

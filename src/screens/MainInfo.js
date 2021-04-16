@@ -6,20 +6,24 @@ import {boxStyle} from '../utils/styles';
 import {PRIMARY} from '../utils/colors';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {addToTemp} from '../redux/actions/core';
 
 const MainInfo = ({navigation}) => {
   const [] = useState(false);
   const [locationName, setLocationName] = useState('');
-  const [sLoc, setSLoc] = useState('');
+  // const [sLoc, setSLoc] = useState('');
   const dispatch = useDispatch();
+  const {social} = useSelector((state) => state);
 
   const onNext = () => {
-    if (!locationName) {
-      Alert.alert('Please enter a location name');
+    if (social === '') {
+      navigator.alert('Kindly add your social profile url');
+      navigation.goBack();
+    } else if (!locationName) {
+      navigator.alert('Please enter a Business / Shop Name');
     } else {
-      dispatch(addToTemp({locationName, similarLocationName: sLoc}));
+      dispatch(addToTemp({locationName}));
       navigation.navigate('Location');
     }
   };
@@ -30,18 +34,18 @@ const MainInfo = ({navigation}) => {
         <CustomInput
           value={locationName}
           setValue={setLocationName}
-          label="Location Name*"
-          placeholder="Location Name*"
+          label="Business / Shop Name*"
+          placeholder="Business / Shop Name"
           icon={locationIcon}
         />
 
-        <CustomInput
+        {/* <CustomInput
           value={sLoc}
           setValue={setSLoc}
           label="Similar Location Name"
           placeholder="Similar Location Name"
           icon={locationIcon}
-        />
+        /> */}
       </View>
 
       <CustomButton text="Next" style={styles.next} onPress={onNext} />

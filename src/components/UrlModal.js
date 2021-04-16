@@ -36,6 +36,7 @@ const UrlModal = ({visible, setVisible, onSave, initValue = ''}) => {
             setValue={setInput}
             placeholder="profile link"
             style={styles.input}
+            multiline
           />
 
           <CustomButton
@@ -71,6 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 25,
     borderRadius: 10,
+    width: '80%',
   },
   title: {
     fontSize: 20,
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 15,
+    alignSelf: 'stretch',
   },
 });
 

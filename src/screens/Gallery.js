@@ -28,18 +28,22 @@ const Gallery = ({navigation}) => {
 
   const onSubmit = () => {
     if (!tnc) {
-      Alert.alert('Accept TnC');
+      navigator.alert('Accept Terms and Conditions');
     } else if (photos.full.length === 0) {
-      Alert.alert('Full look photos are mandatory, please upload atleast one.');
+      navigator.alert(
+        'Full look photos are mandatory, please upload atleast one.',
+      );
     } else if (photos.entrance.length === 0) {
-      Alert.alert('Entrance photos are mandatory, please upload atleast one.');
+      navigator.alert(
+        'Entrance photos are mandatory, please upload atleast one.',
+      );
     } else
       dispatch(
-        saveLocation((url) => {
+        saveLocation(() => {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{name: 'Success', params: {url}}],
+              routes: [{name: 'Success'}],
             }),
           );
         }),

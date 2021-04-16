@@ -10,10 +10,12 @@ export const getUserRecord = () => async (dispatch) => {
       {data: deletedData},
       {data: verifiedData},
       {data: totalData},
+      {data: shareData},
     ] = await Promise.all([
       axios.post('/api/totalDeleted'),
       axios.post('/api/totalVerified'),
       axios.post('/api/totalUploaded'),
+      axios.post('/api/getShare'),
     ]);
 
     // console.log({deletedData, verifiedData, totalData});
@@ -24,6 +26,10 @@ export const getUserRecord = () => async (dispatch) => {
         uploaded: totalData?.count ?? -1,
         verified: verifiedData?.count ?? -1,
       },
+    });
+    dispatch({
+      type: 'SHARE_URL',
+      payload: shareData?.url ?? '',
     });
   } catch (err) {
     console.log(err);
@@ -50,10 +56,10 @@ export const uploadImage = (image, type) => async (dispatch) => {
         },
       ],
     );
-    console.log(jsonData.substring(0, 500));
+    // console.log(jsonData.substring(0, 500));
     const data = JSON.parse(jsonData);
 
-    console.log(data);
+    // console.log(data);
     dispatch({
       type: 'UPLOAD_IMAGE',
       payload: {
@@ -100,7 +106,7 @@ export const addLocation = (data, callback) => async (dispatch, getState) => {
       dispatch(addToTemp(data));
       callback();
     } else {
-      Alert.alert(
+      navigator.alert(
         'The said location cannot be uploaded as Poinlocals already has a similar location in such area',
       );
     }
@@ -115,6 +121,7 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
   try {
     const state = getState();
     // console.log('state', state.temp.phNo);
+    const date = getDate();
 
     var data = new FormData();
     data.append('action', 'add_location');
@@ -135,8 +142,8 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
     data.append('data[phoneOne]', state.temp.phNo[1].toString());
     data.append('data[phoneTwo]', state.temp.phNo[2].toString());
     data.append('data[Email]', state.temp.email.toString());
-    data.append('data[Created]', '1566994108'); //format of date unknown? epochs is not supported
-    data.append('data[Updated]', '1566994108');
+    data.append('data[Created]', date); //format of date unknown? epochs is not supported
+    data.append('data[Updated]', date);
     data.append('data[ChangeRequest]', '0');
     state.temp.photos.entrance.forEach((path) =>
       data.append('data[entrancePhotos][]', path.toString()),
@@ -159,7 +166,7 @@ export const saveLocation = (callback) => async (dispatch, getState) => {
     dispatch({
       type: 'RESET_TEMP',
     });
-    callback(res.data.info.url);
+    callback();
   } catch (err) {
     console.log(err);
     // console.log(JSON.stringify(err));
@@ -189,4 +196,16 @@ export const updateSocial = (social, callback) => async (dispatch) => {
     // console.log(JSON.stringify(err));
   }
   dispatch(stopLoading);
+};
+
+const getDate = () => {
+  const today = new Date();
+
+  let dd = today.getDate();
+  let mm = today.getMonth() + 1;
+  let yyyy = today.getFullYear();
+  if (dd < 10) dd = '0' + dd;
+  if (mm < 10) mm = '0' + mm;
+
+  return `${mm}${dd}${yyyy}`;
 };

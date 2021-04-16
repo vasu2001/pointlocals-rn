@@ -36,7 +36,7 @@ const Contact = ({navigation}) => {
         <CustomInput
           value={phNo}
           setValue={setPhNo}
-          placeholder="Mobile Phone Number*"
+          placeholder="Mobile Phone Number"
           label="Mobile Phone Number"
           keyboardType="number-pad"
           maxLength={10}
