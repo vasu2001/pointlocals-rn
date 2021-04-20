@@ -199,13 +199,5 @@ export const updateSocial = (social, callback) => async (dispatch) => {
 };
 
 const getDate = () => {
-  const today = new Date();
-
-  let dd = today.getDate();
-  let mm = today.getMonth() + 1;
-  let yyyy = today.getFullYear();
-  if (dd < 10) dd = '0' + dd;
-  if (mm < 10) mm = '0' + mm;
-
-  return `${mm}${dd}${yyyy}`;
+  return Math.floor(Date.now() / 1000);
 };

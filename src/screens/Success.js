@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
   note: {
     color: '#000000a0',
     marginTop: 20,
+    textAlign: 'center',
   },
 
   copy: {
