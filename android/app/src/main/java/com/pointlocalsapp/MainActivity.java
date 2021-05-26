@@ -1,4 +1,4 @@
-package com.pointlocals;
+package com.pointlocalsapp;
 
 import android.os.Bundle;
 
